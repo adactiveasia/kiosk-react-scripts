@@ -15,10 +15,12 @@
     "screencast": "svg-term --cast hItN7sl5yfCPTHxvFg5glhhfp --out screencast.svg --window",
     "test": "cd packages/react-scripts && node scripts/test.js --env=jsdom",
     "format": "prettier --trailing-comma es5 --single-quote --write 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "flow": "flow"
   },
   "devDependencies": {
     "eslint": "^4.4.1",
+    "flow-bin": "^0.69.0",
     "husky": "^0.13.2",
     "lerna": "2.6.0",
     "lerna-changelog": "^0.6.0",
@@ -34,5 +36,9 @@
     "yarn.lock": [
       "git rm --cached"
     ]
+  },
+  "dependencies": {
+    "flow": "^0.2.3",
+    "init": "^0.1.2"
   }
 }
