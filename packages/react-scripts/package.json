@@ -1,6 +1,6 @@
 {
   "name": "@adactive/kiosk-react-scripts",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Configuration and scripts for Kiosk React App.",
   "repository": "AdactiveSAS/create-react-app",
   "license": "MIT",
