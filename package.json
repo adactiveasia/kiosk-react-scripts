@@ -29,16 +29,12 @@
     "svg-term-cli": "^2.0.3"
   },
   "lint-staged": {
-    "*.js": [
+    "src/**/*.{js,jsx,json,css}": [
       "prettier --trailing-comma es5 --single-quote --write",
       "git add"
     ],
     "yarn.lock": [
       "git rm --cached"
     ]
-  },
-  "dependencies": {
-    "flow": "^0.2.3",
-    "init": "^0.1.2"
   }
 }
