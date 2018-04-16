@@ -1,6 +1,6 @@
 {
   "name": "@adactive/kiosk-react-scripts",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Configuration and scripts for Kiosk React App.",
   "repository": "AdactiveSAS/create-react-app",
   "license": "MIT",
@@ -43,6 +43,7 @@
     "eslint-plugin-react": "7.4.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
+    "firebase": "^4.12.1",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
