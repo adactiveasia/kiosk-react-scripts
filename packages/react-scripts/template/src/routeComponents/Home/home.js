@@ -1,8 +1,9 @@
 import * as React from 'react';
-import './header.css';
-import { push } from 'react-router-redux'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { push } from 'react-router-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import './home.css';
 
 type Props = {
   changePage: () => void
