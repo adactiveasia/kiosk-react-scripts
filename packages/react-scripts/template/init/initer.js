@@ -2,7 +2,10 @@ const fs = require('fs');
 
 const packageJson = require('../package.json');
 const scriptsToAdd = {
-  serve: "cd build && ws --spa"
+  serve: "cd build && ws --spa",
+  "compile-server": "webpack --config ./build-conf/webpack.config.server.js",
+  doc: "jsdoc -c ./build-conf/jsdoc_conf.app.json -t ./node_modules/ink-docstrap/template",
+  "doc-server": "jsdoc -c ./build-conf/jsdoc_conf.server.json -t ./node_modules/ink-docstrap/template",
 };
 
 packageJson.scripts = { ...packageJson.scripts, ...scriptsToAdd };

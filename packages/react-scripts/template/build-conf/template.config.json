@@ -1,0 +1,10 @@
+{
+	"languages": [
+		"fr",
+		"en"
+	],
+	"defaultLanguage": "en",
+    "widgets": {
+    	"qrCode": true
+    }
+}
