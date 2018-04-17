@@ -27,4 +27,4 @@ const deleteFolderRecursive = function(path) {
   }
 };
 
-deleteFolderRecursive('./');
+deleteFolderRecursive(__dirname);
