@@ -18,7 +18,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const spawn = require('react-dev-utils/crossSpawn');
-const prompt = require('prompt');
 
 module.exports = function(
   appPath,
@@ -89,22 +88,6 @@ module.exports = function(
       }
     }
   );
-
-
-    //
-    // Start the prompt
-    //
-    prompt.start();
-
-    prompt.get({
-        properties: {
-            token: {
-                description: chalk.cyan(`  What's your Adactive private npm token ?`)
-            }
-        }
-    }, function (err, result) {
-        console.log(colors.cyan("You said your token is: " + result.token));
-    });
 
   let command;
   let args;

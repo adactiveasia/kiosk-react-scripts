@@ -48,6 +48,7 @@ const unpack = require('tar-pack').unpack;
 const url = require('url');
 const hyperquest = require('hyperquest');
 const envinfo = require('envinfo');
+const prompt = require('prompt');
 
 const packageJson = require('./package.json');
 
@@ -272,6 +273,32 @@ function install(root, useYarn, dependencies, verbose, isOnline) {
       resolve();
     });
   });
+}
+
+function npmToken() {
+    //
+    // Start the prompt
+    //
+    prompt.start();
+    return new Promise(
+          (resolve,reject)=> {
+              prompt.get({
+              properties: {
+                  token: {
+                      description: chalk.cyan(`  What's your Adactive private npm token ?`)
+                  }
+              }
+          }, function (err, result) {
+                if(err) {
+                    console.log(chalk.red("Error in : ", err));
+                    reject(err);
+                }
+                console.log(chalk.cyan("You said your token is: " + result.token));
+                resolve();
+          });
+        }
+    );
+
 }
 
 function run(
