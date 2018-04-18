@@ -313,9 +313,12 @@ function run(
   const packageToInstall = getInstallPackage(version, originalDirectory);
   const allDependencies = ['react', 'react-dom', packageToInstall];
 
-  console.log('Installing packages. This might take a couple of minutes.');
-  getPackageName(packageToInstall)
-    .then(packageName =>
+    npmToken().then(
+        ()=>{
+          console.log('Installing packages. This might take a couple of minutes.');
+          return getPackageName(packageToInstall)
+        }
+    ).then(packageName =>
       checkIfOnline(useYarn).then(isOnline => ({
         isOnline: isOnline,
         packageName: packageName,
