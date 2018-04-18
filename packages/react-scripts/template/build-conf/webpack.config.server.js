@@ -32,7 +32,6 @@ const getConfig = (support, isProd) => {
     };
 
     const config = {
-        mode: isProd ? 'production' : 'development',
         cache: true,
         target: 'node',
         entry: ['./server/index'],
