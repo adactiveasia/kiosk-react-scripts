@@ -130,6 +130,12 @@ module.exports = function(
     }
   }
 
+  const proc = spawn.sync('node', ['init/initer.js'], { stdio: 'inherit' });
+  if (proc.status !== 0) {
+      console.error(`\`${node} init/initer.js\` failed`);
+      return;
+  }
+
   // Display the most elegant way to cd.
   // This needs to handle an undefined originalDirectory for
   // backward compatibility with old global-cli's.
