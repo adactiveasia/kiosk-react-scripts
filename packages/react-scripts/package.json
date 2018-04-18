@@ -18,7 +18,6 @@
     "utils"
   ],
   "bin": {
-    "flow": "flow",
     "react-scripts": "./bin/react-scripts.js"
   },
   "dependencies": {

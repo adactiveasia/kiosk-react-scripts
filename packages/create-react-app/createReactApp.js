@@ -275,32 +275,6 @@ function install(root, useYarn, dependencies, verbose, isOnline) {
   });
 }
 
-function npmToken() {
-    //
-    // Start the prompt
-    //
-    prompt.start();
-    return new Promise(
-          (resolve,reject)=> {
-              prompt.get({
-              properties: {
-                  token: {
-                      description: chalk.cyan(`  What's your Adactive private npm token ?`)
-                  }
-              }
-          }, function (err, result) {
-                if(err) {
-                    console.log(chalk.red("Error in : ", err));
-                    reject(err);
-                }
-                console.log(chalk.cyan("You said your token is: " + result.token));
-                resolve();
-          });
-        }
-    );
-
-}
-
 function run(
   root,
   appName,
@@ -313,12 +287,9 @@ function run(
   const packageToInstall = getInstallPackage(version, originalDirectory);
   const allDependencies = ['react', 'react-dom', packageToInstall];
 
-    npmToken().then(
-        ()=>{
-          console.log('Installing packages. This might take a couple of minutes.');
-          return getPackageName(packageToInstall)
-        }
-    ).then(packageName =>
+  console.log('Installing packages. This might take a couple of minutes.');
+  getPackageName(packageToInstall)
+    .then(packageName =>
       checkIfOnline(useYarn).then(isOnline => ({
         isOnline: isOnline,
         packageName: packageName,
