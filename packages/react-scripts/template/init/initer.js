@@ -1,33 +1,25 @@
-const fs = require('fs');
+const {
+  scriptsToAdd,
+  dependenciesToAdd,
+  dependenciesToRemove
+} = require('./config');
+
+const {
+  askForToken,
+  writePackageJson,
+  deleteFolderRecursive,
+  addTokenToNpmrc,
+  installPackages,
+  removeIniterDependencies
+} = require('./helpers');
 
 const packageJson = require('../package.json');
-const scriptsToAdd = {
-  serve: "cd build && ws --spa",
-  "compile-server": "webpack --config ./build-conf/webpack.config.server.js",
-  doc: "jsdoc -c ./build-conf/jsdoc_conf.app.json -t ./node_modules/ink-docstrap/template",
-  "doc-server": "jsdoc -c ./build-conf/jsdoc_conf.server.json -t ./node_modules/ink-docstrap/template",
-};
-
 packageJson.scripts = { ...packageJson.scripts, ...scriptsToAdd };
+packageJson.dependencies = { ...packageJson.dependencies, ...dependenciesToAdd };
 
-const stringifiedPackageJson = JSON.stringify(packageJson, null, 4);
-
-fs.writeFileSync('package.json', stringifiedPackageJson);
-
-const deleteFolderRecursive = function(path) {
-  if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(function(file) {
-      const curPath = path + "/" + file;
-
-      if (fs.lstatSync(curPath).isDirectory()) {
-        deleteFolderRecursive(curPath);
-      } else { // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-
-    fs.rmdirSync(path);
-  }
-};
-
-deleteFolderRecursive(__dirname);
+askForToken()
+  .then(addTokenToNpmrc)
+  .then(installPackages)
+  .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
+  .then(writePackageJson.bind(null, packageJson))
+  .then(deleteFolderRecursive.bind(null, __dirname));
