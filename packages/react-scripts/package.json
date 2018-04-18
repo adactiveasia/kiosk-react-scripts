@@ -1,6 +1,6 @@
 {
   "name": "@adactive/kiosk-react-scripts",
-  "version": "1.1.14",
+  "version": "1.1.16",
   "description": "Configuration and scripts for Kiosk React App.",
   "repository": "AdactiveSAS/create-react-app",
   "license": "MIT",
@@ -22,12 +22,8 @@
     "react-scripts": "./bin/react-scripts.js"
   },
   "dependencies": {
-    "adsum-adloader": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-adloader#develop",
-    "adsum-client-analytics": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-client-analytics#v1.0.1",
-    "adsum-proxy-analytics": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-proxy-analytics#v1.4.0",
-    "adsum-client-api": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-client-api#support/1.x",
-    "adsum-proxy-api": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-proxy-api",
-    "adsum-web-map": "git+https://f1a42af6fa16e2f0c24c975013b14a8126e75ce4:x-oauth-basic@github.com/AdactiveSAS/adsum-web-map#support/4.x",
+    "@adactive/adsum-client-api": "^2.0.0",
+    "@adactive/adsum-web-map": "^5.0.0",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
