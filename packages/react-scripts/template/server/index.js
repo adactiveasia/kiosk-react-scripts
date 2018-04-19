@@ -1,6 +1,5 @@
 import Server from "./Server";
 import Version from "./Version";
-import Chrome from "./Chrome";
 import Options from "./options/Options";
 
 /**
@@ -16,11 +15,6 @@ export {
      * {@link Options}
      */
     Options,
-
-    /**
-     * {@link Chrome}
-     */
-    Chrome,
 
     /**
      * {@link Version}
