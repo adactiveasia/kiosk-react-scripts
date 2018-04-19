@@ -22,4 +22,5 @@ askForToken()
   .then(installPackages)
   .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
   .then(writePackageJson.bind(null, packageJson))
+  .then(installPackages)
   .then(deleteFolderRecursive.bind(null, __dirname));
