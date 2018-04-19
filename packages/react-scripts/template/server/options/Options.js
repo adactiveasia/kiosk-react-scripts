@@ -81,9 +81,9 @@ class Options extends AbstractOptions {
     }
 
     setCacheOptions(json) {
-      this.cache = new CacheOptions({
-          ...this.jsonConfig
-        });
+      this.cache = new CacheOptions(
+        Object.assign({}, this.jsonConfig)
+      );
     }
 
     reset() {

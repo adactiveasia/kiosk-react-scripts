@@ -40,7 +40,7 @@ class Server {
         *
         * @type {LocalCacheManager}
         */
-        this.cacheManager = new LocalCacheManager(this.options.)
+        this.cacheManager = new LocalCacheManager(this.options.jsonConfigFile);
 
         //Object.freeze(this); // Don't want to freeze it for now
     }
