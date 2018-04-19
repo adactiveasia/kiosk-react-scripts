@@ -1,7 +1,7 @@
 {
     "siteId": 339,
     "map": {
-        "deviceId": 1056,
+        "deviceId": 1056
     },
     "api": {
         "endpoint": "https://asia-api.adsum.io",

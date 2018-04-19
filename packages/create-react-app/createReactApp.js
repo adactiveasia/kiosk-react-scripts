@@ -48,7 +48,6 @@ const unpack = require('tar-pack').unpack;
 const url = require('url');
 const hyperquest = require('hyperquest');
 const envinfo = require('envinfo');
-const prompt = require('prompt');
 
 const packageJson = require('./package.json');
 

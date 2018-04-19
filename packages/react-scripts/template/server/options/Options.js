@@ -1,7 +1,5 @@
 import AbstractOptions from "./AbstractOptions";
 import check from "check-types";
-import xml2js from "xml2js";
-import fs from "fs";
 
 import {ProxyOptions as APAProxyOptions } from "adsum-proxy-api";
 import {ServerOptions as APAServerOptions } from "adsum-proxy-api";
@@ -34,14 +32,14 @@ class Options extends AbstractOptions {
             this.extractArgument("port", args);
         }
 
-        this.xml = {};
-        this.parseXmlFile();
+        this.jsonConfig = {};
+        this.readAppConfig();
 
         this.config = {
-            site: this.xml.site,
-            device: this.xml.device
+            site: this.jsonConfig.site,
+            device: this.jsonConfig.device
         };
-        
+
         this.setApiOptions(json);
         this.setAnalyticsOptions(json);
 
@@ -69,25 +67,25 @@ class Options extends AbstractOptions {
         }
     }
 
-    parseXmlFile(){
-        let xml_raw = fs.readFileSync(this.xml_file, 'utf8');
-        xml2js.parseString(xml_raw, (err, result) => {
-            if (err) throw new Error(`Unable to parse xml config file at ${this.xml_file}`);
+    readAppConfig() {
+        let jsonConfig = null;
 
-            this.xml.site = parseInt(result.Adsum.siteId[0]);
-            this.xml.device = parseInt(result.Adsum.kioskId[0]);
-            this.xml.key = result.Adsum.APIKEY[0];
-            this.xml.endpoint = result.Adsum.WSURL[0].replace(/([0-9]+\.[0-9]+)(\/)?$/, '').replace(/^http(s)?/, 'https').replace(/.$/,'');
-            this.xml.analyticsSite = parseInt(result.Adsum.PIWIKSITEID[0]);
-            this.xml.distAnalyticsEndpoint = result.Adsum.PIWIKURL[0].replace(/([0-9]+\.[0-9]+)(\/)?$/, '').replace(/^http(s)?/, 'https');
-            this.xml.analyticsToken = result.Adsum.PIWIKKEY[0];
-        });
+        try {
+          jsonConfig = require(this.jsonConfigFile);
+        } catch (e) {
+          if (e) throw new Error(`Unable to read json config file at ${this.jsonConfigFile}`);
+        }
+
+        this.jsonConfig.site = jsonConfig.api.site;
+        this.jsonConfig.device = jsonConfig.map.deviceId;
+        this.jsonConfig.key = jsonConfig.api.key;
+        this.jsonConfig.endpoint = jsonConfig.api.endpoint;
     }
 
     setApiOptions(json){
         const options = new APAProxyOptions({
             ...this.api,
-            site: this.xml.site,
+            site: this.jsonConfig.site,
             server: {
                 hostname: this.hostname,
                 port: parseInt(this.port),
@@ -95,9 +93,9 @@ class Options extends AbstractOptions {
             },
             updater: {
                 ...this.api.updater,
-                username: `${this.xml.device}-device`,
-                key: this.xml.key,
-                endpoint: this.xml.endpoint
+                username: `${this.jsonConfig.device}-device`,
+                key: this.jsonConfig.key,
+                endpoint: this.jsonConfig.endpoint
             },
             storage: {
                 ...this.api.storage,
@@ -120,23 +118,23 @@ class Options extends AbstractOptions {
             endpoint: `http://${this.api.server.hostname}:${this.api.server.port}${this.api.server.route}`,
             username: this.api.updater.username,
             key: this.api.updater.key,
-            remoteEndpoint: this.xml.endpoint
+            remoteEndpoint: this.jsonConfig.endpoint
         };
     }
 
     setAnalyticsOptions(json){
         const options = new APANProxyOptions({
-            site: this.xml.site,
-            device: this.xml.device,
+            site: this.jsonConfig.site,
+            device: this.jsonConfig.device,
             server: {
                 hostname: this.hostname,
                 port: parseInt(this.port),
                 route: '/local-analytics'
             },
             analytics: {
-                site: this.xml.analyticsSite,
-                key: this.xml.analyticsToken,
-                endpoint: this.xml.distAnalyticsEndpoint
+                site: this.jsonConfig.analyticsSite,
+                key: this.jsonConfig.analyticsToken,
+                endpoint: this.jsonConfig.distAnalyticsEndpoint
             },
             storage: {
                 folder: this.data_folder,
@@ -159,7 +157,7 @@ class Options extends AbstractOptions {
             endpoint: `http://${this.analytics.server.hostname}:${this.analytics.server.port}${this.analytics.server.route}`,
             site: this.analytics.analytics.site,
             key: this.analytics.analytics.key,
-            remoteEndpoint: this.xml.distAnalyticsEndpoint
+            remoteEndpoint: this.jsonConfig.distAnalyticsEndpoint
         };
     }
 
@@ -169,9 +167,9 @@ class Options extends AbstractOptions {
         /**
          *
          * @type {string}
-         * @default "./config.xml"
+         * @default "./config.json"
          */
-        this.xml_file = "./config.xml";
+        this.jsonConfigFile = "./config.json";
 
         /**
          *
@@ -258,8 +256,8 @@ class Options extends AbstractOptions {
     validate() {
         const errors = super.validate();
 
-        if (check.not.nonEmptyString(this.xml_file)) {
-            errors.xml_file = "Should be a non empty string";
+        if (check.not.nonEmptyString(this.jsonConfigFile)) {
+            errors.jsonConfigFile = "Should be a non empty string";
         }
 
         if (check.not.nonEmptyString(this.data_folder)) {
