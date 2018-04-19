@@ -16,15 +16,7 @@ let apiLogger = {
     debug(...args) { return this.log('debug', ...args); },
     silly(...args) { return this.log('silly', ...args); }
 };
-let analyticsLogger = {
-    log(level, msg, context) { console.log(`[${level}]: ${msg}`); if (context) { console.log(context); } },
-    error(...args) { return this.log('error', ...args); },
-    warn(...args) { return this.log('warn', ...args); },
-    info(...args) { return this.log('info', ...args); },
-    verbose(...args) { return this.log('verbose', ...args); },
-    debug(...args) { return this.log('debug', ...args); },
-    silly(...args) { return this.log('silly', ...args); }
-};
+
 try {
     const NodeLogger = require('node-logger');
 
@@ -34,7 +26,6 @@ try {
 
     applicationLogger = NodeLogger.loggers.get('AS');
     apiLogger = NodeLogger.loggers.get('APA');
-    analyticsLogger = NodeLogger.loggers.get('APAN');
 } catch (e) {
 }
 // //////////////////////////////////////////////////////////////////////////////////////////
@@ -57,12 +48,6 @@ const options = {
                 file: 'context=texture,texture_occlusion',
                 map: 'type=dae,path,model,aoDae'
             }
-        }
-    },
-    analytics: {
-        logger: analyticsLogger,
-        storage: {
-            flushMsec: 60000
         }
     }
 };

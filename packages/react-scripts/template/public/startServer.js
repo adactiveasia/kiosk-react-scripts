@@ -5,13 +5,6 @@ let server = new AS.Server(new AS.Options(serverOptions));
 
 server.start().then((server) => {
     console.log(server.url);
-
-    server.analytics.start();
-    /*result.analytics.ping().then(
-        (result)=>{
-            console.log(result);
-        }
-    );*/
 }, console.log);
 
 

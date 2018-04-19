@@ -3,8 +3,6 @@ import check from "check-types";
 
 import {ProxyOptions as APAProxyOptions } from "adsum-proxy-api";
 import {ServerOptions as APAServerOptions } from "adsum-proxy-api";
-import {ProxyOptions as APANProxyOptions } from "adsum-proxy-analytics";
-import {ServerOptions as APANServerOptions } from "adsum-proxy-analytics";
 
 /**
  * @extends AbstractOptions
@@ -41,7 +39,6 @@ class Options extends AbstractOptions {
         };
 
         this.setApiOptions(json);
-        this.setAnalyticsOptions(json);
 
         Object.seal(this);
     }
@@ -122,45 +119,6 @@ class Options extends AbstractOptions {
         };
     }
 
-    setAnalyticsOptions(json){
-        const options = new APANProxyOptions({
-            site: this.jsonConfig.site,
-            device: this.jsonConfig.device,
-            server: {
-                hostname: this.hostname,
-                port: parseInt(this.port),
-                route: '/local-analytics'
-            },
-            analytics: {
-                site: this.jsonConfig.analyticsSite,
-                key: this.jsonConfig.analyticsToken,
-                endpoint: this.jsonConfig.distAnalyticsEndpoint
-            },
-            storage: {
-                folder: this.data_folder,
-                ...this.analytics.storage
-            }
-        });
-
-        if(json.analytics && json.analytics.server){
-            console.log('Analytics proxy server have been defined, the server will use it');
-            options.server = new APANServerOptions(this.analytics.server);
-        }
-
-        if(this.analytics.logger !== null && this.analytics.logger !== undefined){
-            options.logger = this.analytics.logger;
-        }
-
-        this.analytics = options;
-
-        this.config.analytics = {
-            endpoint: `http://${this.analytics.server.hostname}:${this.analytics.server.port}${this.analytics.server.route}`,
-            site: this.analytics.analytics.site,
-            key: this.analytics.analytics.key,
-            remoteEndpoint: this.jsonConfig.distAnalyticsEndpoint
-        };
-    }
-
     reset() {
         super.reset();
 
@@ -211,12 +169,6 @@ class Options extends AbstractOptions {
          * @type {APA.ProxyOptions}
          */
         this.api = new APAProxyOptions();
-
-        /**
-         *
-         * @type {APAN.ProxyOptions}
-         */
-        this.analytics = new APANProxyOptions();
 
         /**
          * A logger instance

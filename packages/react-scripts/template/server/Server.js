@@ -10,17 +10,16 @@ import http from "http";
 import fs from "fs";
 
 import {Proxy as APAProxy } from "adsum-proxy-api";
-import {Proxy as APANProxy } from "adsum-proxy-analytics";
 
 /**
- * 
+ *
  */
 class Server {
     /**
      * Create a new server
-     * 
+     *
      * Note: the provided option will be frozen to prevent modifications
-     * 
+     *
      * @param {ServerOptions} options
      */
     constructor(options) {
@@ -41,12 +40,6 @@ class Server {
          * @type {APA}
          */
         this.proxyAPI = new APAProxy(options.api);
-
-        /**
-         *
-         * @type {APAN}
-         */
-        this.proxyAnalytics = new APANProxy(options.analytics);
 
         //Object.freeze(this); // Don't want to freeze it for now
     }
@@ -79,7 +72,6 @@ class Server {
                         resolve(
                             {
                                 url: `http://${this.options.hostname}:${this.options.port}/index.html`,
-                                analytics: this.proxyAnalytics.analytics,
                                 app: this.app
                             }
                         );
@@ -205,41 +197,6 @@ class Server {
         for (var i = 0; i < this.routes.length; i++) {
             app.use(`${route}${this.routes[i].name}`,this.routes[i].callback);
         }
-
-        app.use(`${route}/readLocalAnalytics`, (req, res, next) =>{
-            let data=null;
-            let path = './local/analytics.json';
-            try {
-                data = fs.readFileSync(path);
-            } catch (e) {
-                console.error("Can't find analytics.json");
-                console.error(e.message);
-            }
-            res.end(data);
-            next();
-        });
-
-        app.use(`${route}/writeLocalAnalytics`,  (req, res, next) => {
-            let data = null;
-            let path = './local/analytics.json';
-            try {
-                if (req.body.tracking) {
-                    data = fs.writeFile(path, JSON.stringify(req.body.tracking, null, 4), function (err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("JSON saved to " + path);
-                        }
-                    });
-                }
-            } catch (e) {
-                console.error("Can't write into analytics.json ");
-                console.error(e.message);
-            }
-
-            res.end(data);
-            next();
-        });
 
         app.use(`${route}/deviceConfig`,  (req, res, next) =>{
             res.end(JSON.stringify(this.options.config));
@@ -383,8 +340,6 @@ class Server {
 
             next();
         });
-
-        this.proxyAnalytics.server.bind(app);
 
         this.proxyAPI.server.bind(app);
 
