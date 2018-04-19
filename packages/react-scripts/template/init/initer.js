@@ -19,7 +19,6 @@ packageJson.dependencies = { ...packageJson.dependencies, ...dependenciesToAdd }
 
 askForToken()
   .then(addTokenToNpmrc)
-  .then(installPackages)
   .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
   .then(writePackageJson.bind(null, packageJson))
   .then(installPackages)
