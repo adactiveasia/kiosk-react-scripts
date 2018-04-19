@@ -1,8 +1,7 @@
 import AbstractOptions from "./AbstractOptions";
 import check from "check-types";
 
-import {ProxyOptions as APAProxyOptions } from "adsum-proxy-api";
-import {ServerOptions as APAServerOptions } from "adsum-proxy-api";
+import { CacheOptions } from "@adactive/adsum-client-api";
 
 /**
  * @extends AbstractOptions
@@ -14,18 +13,17 @@ class Options extends AbstractOptions {
      * @param {Object} [json={}]
      */
     constructor(json = {}) {
-
         super();
 
-        if(json.logger === null){
+        if (json.logger === null) {
             json.logger = this.logger;
         }
 
         this.fromJSON(json);
 
         let args = process.argv.slice(2);
-        if(args.length > 0){
-            this.extractArgument("xml_file", args);
+        if (args.length > 0) {
+            this.extractArgument("jsonConfigFile", args);
             this.extractArgument("data_folder", args);
             this.extractArgument("port", args);
         }
@@ -38,7 +36,10 @@ class Options extends AbstractOptions {
             device: this.jsonConfig.device
         };
 
-        this.setApiOptions(json);
+        this.hostname = 'localhost';
+        this.port = 8080;
+
+        this.setCacheOptions(json);
 
         Object.seal(this);
     }
@@ -79,44 +80,10 @@ class Options extends AbstractOptions {
         this.jsonConfig.endpoint = jsonConfig.api.endpoint;
     }
 
-    setApiOptions(json){
-        const options = new APAProxyOptions({
-            ...this.api,
-            site: this.jsonConfig.site,
-            server: {
-                hostname: this.hostname,
-                port: parseInt(this.port),
-                route: '/local-api'
-            },
-            updater: {
-                ...this.api.updater,
-                username: `${this.jsonConfig.device}-device`,
-                key: this.jsonConfig.key,
-                endpoint: this.jsonConfig.endpoint
-            },
-            storage: {
-                ...this.api.storage,
-                folder: this.data_folder
-            }
+    setCacheOptions(json) {
+      this.cache = new CacheOptions({
+          ...this.jsonConfig
         });
-
-        if(json.api && json.api.server){
-            console.log('API proxy server have been defined, the server will use it');
-            options.server = new APAServerOptions(this.api.server);
-        }
-
-        if(this.api.logger !== null && this.api.logger !== undefined){
-            options.logger = this.api.logger;
-        }
-
-        this.api = options;
-
-        this.config.api = {
-            endpoint: `http://${this.api.server.hostname}:${this.api.server.port}${this.api.server.route}`,
-            username: this.api.updater.username,
-            key: this.api.updater.key,
-            remoteEndpoint: this.jsonConfig.endpoint
-        };
     }
 
     reset() {
@@ -166,9 +133,9 @@ class Options extends AbstractOptions {
 
         /**
          *
-         * @type {APA.ProxyOptions}
+         * @type {CacheOptions}
          */
-        this.api = new APAProxyOptions();
+        this.cache = new CacheOptions();
 
         /**
          * A logger instance
@@ -181,22 +148,22 @@ class Options extends AbstractOptions {
                     console.log(context);
                 }
             },
-            error (...args){
+            error (...args) {
                 return this.log("error", ...args);
             },
-            warn (...args){
+            warn (...args) {
                 return this.log("warn", ...args);
             },
-            info (...args){
+            info (...args) {
                 return this.log("info", ...args);
             },
-            verbose (...args){
+            verbose (...args) {
                 return this.log("verbose", ...args);
             },
-            debug (...args){
+            debug (...args) {
                 return this.log("debug", ...args);
             },
-            silly (...args){
+            silly (...args) {
                 return this.log("silly", ...args);
             }
         };

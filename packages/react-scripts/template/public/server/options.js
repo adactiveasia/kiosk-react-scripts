@@ -7,15 +7,6 @@ let applicationLogger = {
     debug(...args) { return this.log('debug', ...args); },
     silly(...args) { return this.log('silly', ...args); }
 };
-let apiLogger = {
-    log(level, msg, context) { console.log(`[${level}]: ${msg}`); if (context) { console.log(context); } },
-    error(...args) { return this.log('error', ...args); },
-    warn(...args) { return this.log('warn', ...args); },
-    info(...args) { return this.log('info', ...args); },
-    verbose(...args) { return this.log('verbose', ...args); },
-    debug(...args) { return this.log('debug', ...args); },
-    silly(...args) { return this.log('silly', ...args); }
-};
 
 try {
     const NodeLogger = require('node-logger');
@@ -25,31 +16,37 @@ try {
     NodeLogger.loggers.add({ name: 'APAN', level: 'debug', label: 'APAN' });
 
     applicationLogger = NodeLogger.loggers.get('AS');
-    apiLogger = NodeLogger.loggers.get('APA');
 } catch (e) {
 }
 // //////////////////////////////////////////////////////////////////////////////////////////
 
 const options = {
     port: 8080,
-    xml_file: './config.xml',
+    jsonConfigFile: './config.json',
     data_folder: './local',
     path: './public/',
     logger: applicationLogger,
-    api: {
-        logger: apiLogger,
-        apiVersion: '2.3',
-        updater: {
-            timeoutMsec: 60000,
-            maxRetryCount: 5,
-            retryDelayMsec: 60000,
-            checkSslCertificateAuthorities: true,
-            queryFiltersByDomain: {
-                file: 'context=texture,texture_occlusion',
-                map: 'type=dae,path,model,aoDae'
-            }
-        }
-    }
+    site: 339,
+    cache: {
+        "endpoint": "https://asia-api.adsum.io",
+        "site": 339,
+        "username": "1056-device",
+        "key": "b6e8e6eaf2c7ff66b783e7721a57ed62f204c3bc3a68b729c1ea3a90a7c1e828"
+    },
+    // api: {
+    //     logger: apiLogger,
+    //     apiVersion: '2.3',
+    //     updater: {
+    //         timeoutMsec: 60000,
+    //         maxRetryCount: 5,
+    //         retryDelayMsec: 60000,
+    //         checkSslCertificateAuthorities: true,
+    //         queryFiltersByDomain: {
+    //             file: 'context=texture,texture_occlusion',
+    //             map: 'type=dae,path,model,aoDae'
+    //         }
+    //     }
+    // }
 };
 
 module.exports = options;
