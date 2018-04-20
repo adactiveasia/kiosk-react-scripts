@@ -1,11 +1,10 @@
-import Options from "./options/Options";
+import Options from "./Options";
 import check from "check-types";
 
 import bodyParser from "body-parser";
 import compression from "compression";
 import connect from "connect";
 import serveStatic from "serve-static";
-import querystring from "querystring";
 import http from "http";
 import fs from "fs";
 
@@ -34,15 +33,13 @@ class Server {
 
         this.app = null;
         this.server = null;
-        this.routes = [];
 
         /**
         *
         * @type {LocalCacheManager}
         */
-        this.cacheManager = new LocalCacheManager(this.options.jsonConfigFile);
+        this.cacheManager = new LocalCacheManager(this.options.data_folder);
 
-        //Object.freeze(this); // Don't want to freeze it for now
     }
 
     start() {
@@ -169,15 +166,6 @@ class Server {
         });
     }
 
-    addRoute(name, callback) {
-        if (typeof callback !== 'function') return;
-
-        this.routes.push({
-            name,
-            callback
-        });
-    }
-
     bind(app = connect()) {
         app.use(compression());
         app.use(bodyParser.json());
@@ -187,137 +175,9 @@ class Server {
 
         app.use(`${route}`, serveStatic(this.options.path, ['index.html']));
 
-        for (let i = 0; i < this.routes.length; i++) {
-            app.use(`${route}${this.routes[i].name}`,this.routes[i].callback);
-        }
-
         app.use(`${route}/deviceConfig`,  (req, res, next) =>{
             res.end(JSON.stringify(this.options.config));
             next();
-        });
-
-        app.use(`${route}/sendForm`,  (req, res, next) => {
-            // Build the post string from an object
-
-            let post_data = querystring.stringify(req.body.data);
-            // An object of options to indicate where to post to
-            let post_options = {
-                host: req.body.url,
-                path: req.body.path,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Length': Buffer.byteLength(post_data)
-                }
-            };
-
-            // Set up the request
-            let post_req = http.request(post_options, function (response) {
-                let body = '';
-
-                response.setEncoding('utf8');
-
-                response.on('data', function (chunk) {
-                    body += chunk;
-                });
-                response.on('end', function () {
-                    res.end(body);
-                    next();
-                });
-            });
-
-            // post the data
-            post_req.write(post_data);
-            post_req.end();
-
-        });
-
-        app.use(`${route}/sendPostRequest`, (req, res, next) => {
-
-            // Build the post string from an object
-            let post_data = querystring.stringify(req.body.data);
-
-            // An object of options to indicate where to post to
-            let post_options = {
-                host: req.body.url,
-                path: req.body.path,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Length': Buffer.byteLength(post_data)
-                }
-            };
-
-            // Set up the request
-            let post_req = http.request(post_options, function (response) {
-                let body = '';
-
-                response.setEncoding('utf8');
-
-                response.on('data', function (chunk) {
-                    body += chunk;
-                });
-                response.on('end', function () {
-                    res.end(body);
-                    next();
-                });
-            });
-
-            post_req.on('error', (e) => {
-                console.error(`problem with request: ${e.message}`);
-                var response = {};
-                response.error = 'problem with request:' + `${e.message}`;
-
-                res.end(JSON.stringify(response));
-
-                next();
-            });
-
-            // post the data
-            post_req.write(post_data);
-            post_req.end();
-
-        });
-
-        app.use(`${route}/sendGetRequest`,  (req, res, next) => {
-
-            // Build the post string from an object
-            let get_data = querystring.stringify(req.body.data);
-
-            let pathUrl = req.body.path + '?' + get_data;
-
-            // An object of options to indicate where to post to
-            let get_options = {
-                host: req.body.url,
-                path: pathUrl
-            };
-
-
-            // Set up the request
-            let get_req = http.request(get_options, function (response) {
-                response.setEncoding('utf8');
-                let body = '';
-                response.on('data', function (chunk) {
-                    body += chunk;
-                });
-                response.on('end', function () {
-                    res.end(body);
-                    next();
-                });
-            });
-
-            get_req.on('error', (e) => {
-                console.error(`problem with request: ${e.message}`);
-                var response = {};
-                response.error = 'problem with request:' + `${e.message}`;
-                res.end(JSON.stringify(response));
-                next();
-            });
-
-            // get the data
-            get_req.end();
-
-
         });
 
         // request /localFile?path=..

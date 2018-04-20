@@ -1,6 +1,6 @@
 import Server from "./Server";
 import Version from "./Version";
-import Options from "./options/Options";
+import Options from "./Options";
 
 /**
  * @exports APB

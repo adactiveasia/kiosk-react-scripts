@@ -1,11 +1,8 @@
-import AbstractOptions from "./AbstractOptions";
+import { AbstractOptions } from '@adactive/adactive-abstract-options';
 import check from "check-types";
 
 import { CacheOptions } from "@adactive/adsum-client-api";
 
-/**
- * @extends AbstractOptions
- */
 class Options extends AbstractOptions {
 
     /**
@@ -41,7 +38,6 @@ class Options extends AbstractOptions {
 
         this.setCacheOptions(json);
 
-        Object.seal(this);
     }
 
     extractArgument(name, args) {
