@@ -1,5 +1,7 @@
 import { AbstractOptions } from '@adactive/adactive-abstract-options';
 import check from "check-types";
+import path from "path";
+import fs from 'fs-extra';
 
 import { CacheOptions } from "@adactive/adsum-client-api";
 
@@ -26,6 +28,7 @@ class Options extends AbstractOptions {
         }
 
         this.jsonConfig = {};
+        
         this.readAppConfig();
 
         this.config = {
@@ -62,18 +65,17 @@ class Options extends AbstractOptions {
     }
 
     readAppConfig() {
-        let jsonConfig = null;
-
         try {
-          jsonConfig = require(this.jsonConfigFile);
-        } catch (e) {
-          if (e) throw new Error(`Unable to read json config file at ${this.jsonConfigFile}`);
+            const jsonConfig = fs.readJsonSync(path.resolve(`${this.jsonConfigFile}`))
+            this.jsonConfig.site = jsonConfig.api.site;
+            this.jsonConfig.device = jsonConfig.map.deviceId;
+            this.jsonConfig.key = jsonConfig.api.key;
+            this.jsonConfig.endpoint = jsonConfig.api.endpoint;
+            this.jsonConfig.username = `${jsonConfig.map.deviceId}-device`;
+        } catch (err) {
+            if (err) 
+                throw new Error(`Unable to read json config file at ${this.jsonConfigFile}`,err);
         }
-
-        this.jsonConfig.site = jsonConfig.api.site;
-        this.jsonConfig.device = jsonConfig.map.deviceId;
-        this.jsonConfig.key = jsonConfig.api.key;
-        this.jsonConfig.endpoint = jsonConfig.api.endpoint;
     }
 
     setCacheOptions(json) {
@@ -163,53 +165,6 @@ class Options extends AbstractOptions {
                 return this.log("silly", ...args);
             }
         };
-    }
-
-    /**
-     * @inheritDoc
-     */
-    validate() {
-        const errors = super.validate();
-
-        if (check.not.nonEmptyString(this.jsonConfigFile)) {
-            errors.jsonConfigFile = "Should be a non empty string";
-        }
-
-        if (check.not.nonEmptyString(this.data_folder)) {
-            errors.data_folder = "Should be a non empty string";
-        }
-
-        if (check.not.positive(this.port) || check.not.integer(this.port)) {
-            errors.port = "Should be a positive integer";
-        }
-
-        if (check.not.nonEmptyString(this.hostname)) {
-            errors.hostname = "Should be a non empty string";
-        } else {
-            // Remove trailing slash
-            this.hostname = this.hostname.replace(/\/$/, "");
-        }
-
-        if (check.not.nonEmptyString(this.path)) {
-            errors.path = "Should be a non empty string";
-        }
-
-        if (check.not.object(this.logger)) {
-            errors.logger = "Should be an object";
-        } else {
-            const loggerError = {};
-            for (const level of ["error", "warn", "info", "verbose", "debug", "silly", "log"]) {
-                if (check.not.function(this.logger[level])) {
-                    loggerError[level] = "Should be a function";
-                }
-            }
-
-            if (Object.keys(loggerError).length > 0) {
-                errors.logger = loggerError;
-            }
-        }
-
-        return errors;
     }
 }
 

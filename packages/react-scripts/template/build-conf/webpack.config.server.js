@@ -24,11 +24,22 @@ const getConfig = (support, isProd) => {
 
     const babelLoader = {
         test: /\.js$/,
-        include: [path.join(`${__dirname}/../`, 'server')],
-        loader: 'babel-loader',
-        query: {
-            cacheDirectory: true
-        }
+        include: [path.join(__dirname+'/../', "server")],
+        use: [{
+            loader: 'babel-loader',
+            options: {
+                babelrc: false,
+                cacheDirectory: true,
+                presets: [
+                    "react",
+                ],
+                plugins: [
+                    "transform-class-properties",
+                    "transform-object-rest-spread",
+                    "transform-async-to-generator"
+                ]
+            }
+        }]
     };
 
     const config = {

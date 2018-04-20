@@ -24,11 +24,6 @@ class Server {
     constructor(options) {
         check.assert.instance(options, Options, "options are required");
 
-        if (!options.isValid()) {
-            throw new Error("Invalid provided options");
-        }
-        options.freeze();
-
         this.options = options;
 
         this.app = null;
@@ -45,7 +40,7 @@ class Server {
     start() {
         const time = Date.now();
 
-        this.cacheManager.update(
+        return this.cacheManager.update(
             this.options.config.site, // Site Id
             this.options.cache, // Cache options
         ).then((updated) => {
@@ -60,21 +55,6 @@ class Server {
             return this.onSynchroDone();
         }).catch((error) => {
             console.error('Unable to update the cache, and no cache available', error);
-        });
-
-        return this.proxyAPI.updater.run().then((success)=> {
-            console.log(`Sync success in ${parseInt((Date.now() - time) / 1000)} seconds`);
-
-            if (success) {
-                console.log("Working with fresh data");
-            } else {
-                console.log("Working with old data");
-            }
-
-            return this.onSynchroDone();
-        }, (e) => {
-            console.log("Synchronization failed !");
-            console.log(e);
         });
     }
 
