@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'react-router-redux';
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
+import ACA from './services/ClientAPI';
 
 import App from './App';
 
@@ -21,6 +22,15 @@ const dom = (
   </Provider>
 );
 
-ReactDOM.render(dom, root);
+// Load the data
+ACA.entityManager.load().then(() => {
+  	// Retrieve the data you need there
+  	const pois = ACA.entityManager.getRepository('Poi').getAll();
+  	console.log(pois)
 
-registerServiceWorker();
+  	ReactDOM.render(dom, root);
+
+	registerServiceWorker();
+});
+
+

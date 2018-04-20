@@ -7,6 +7,7 @@ import connect from "connect";
 import serveStatic from "serve-static";
 import http from "http";
 import fs from "fs";
+import cors from "cors";
 
 import { LocalCacheManager } from '@adactive/adsum-client-api';
 
@@ -147,6 +148,7 @@ class Server {
     }
 
     bind(app = connect()) {
+        app.use(cors());
         app.use(compression());
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({extended: true}));
