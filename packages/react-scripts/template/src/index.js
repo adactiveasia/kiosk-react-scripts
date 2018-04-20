@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
 import ACA from './services/ClientAPI';
+import FirebaseService from './services/FirebaseService';
 
 import App from './App';
 
