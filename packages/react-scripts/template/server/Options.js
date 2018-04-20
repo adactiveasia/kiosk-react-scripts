@@ -31,13 +31,9 @@ class Options extends AbstractOptions {
         
         this.readAppConfig();
 
-        this.config = {
-            site: this.jsonConfig.site,
-            device: this.jsonConfig.device
-        };
+        this.config = Object.assign({}, this.jsonConfig);
 
         this.hostname = 'localhost';
-        this.port = 8080;
 
         this.setCacheOptions(json);
 
@@ -71,7 +67,7 @@ class Options extends AbstractOptions {
             this.jsonConfig.device = jsonConfig.map.deviceId;
             this.jsonConfig.key = jsonConfig.api.key;
             this.jsonConfig.endpoint = jsonConfig.api.endpoint;
-            this.jsonConfig.username = `${jsonConfig.map.deviceId}-device`;
+            this.jsonConfig.username = jsonConfig.api.username;
         } catch (err) {
             if (err) 
                 throw new Error(`Unable to read json config file at ${this.jsonConfigFile}`,err);
