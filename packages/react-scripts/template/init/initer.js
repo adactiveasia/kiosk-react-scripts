@@ -1,13 +1,13 @@
 const {
   scriptsToAdd,
   dependenciesToAdd,
-  dependenciesToRemove
+  dependenciesToRemove,
+  fileLocations
 } = require('./config');
 
 const {
   installPackages,
   removeIniterDependencies,
-  fileLocations
 } = require('./helpers');
 
 const {
