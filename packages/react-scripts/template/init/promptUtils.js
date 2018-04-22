@@ -94,7 +94,7 @@ module.exports = {
             username: result.apiUsername,
             key: result.apiKey
           }
-        } = result;
+        };
 
         console.log('Your adsum config will look like this: ');
         console.log(adsumConfig);
