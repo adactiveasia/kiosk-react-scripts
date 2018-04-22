@@ -27,7 +27,8 @@ const packageJson = require('../package.json');
 packageJson.scripts = { ...packageJson.scripts, ...scriptsToAdd };
 packageJson.dependencies = { ...packageJson.dependencies, ...dependenciesToAdd };
 
-askForToken()
+Promise.resolve()
+  .then(askForToken)
   .then(addTokenToNpmrc)
   .then(askIfFirebaseNeeded)
   .then(askFirebaseCredentials)
