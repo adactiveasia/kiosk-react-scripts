@@ -2,6 +2,14 @@ const path = require('path');
 
 module.exports = {
   scriptsToAdd: {
+    start: "npm run build-css && run-p -ncr watch-css start-js",
+    "start-js": "react-scripts start",
+    build: "run-s -n build-css build-js",
+    "build-js": "react-scripts build",
+    test: "run-s -n build-css test-js",
+    "test-js": "react-scripts test --env=jsdom",
+    "build-css": "node-less-chokidar src",
+    "watch-css": "node-less-chokidar src --watch",
     serve: "cd build && ws --spa",
     "compile-server": "webpack --config ./build-conf/webpack.config.server.js",
     doc: "jsdoc -c ./build-conf/jsdoc_conf.app.json -t ./node_modules/ink-docstrap/template",
