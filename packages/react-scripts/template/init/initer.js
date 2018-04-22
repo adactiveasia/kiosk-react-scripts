@@ -5,13 +5,23 @@ const {
 } = require('./config');
 
 const {
-  askForToken,
-  writePackageJson,
-  deleteFolderRecursive,
-  addTokenToNpmrc,
   installPackages,
-  removeIniterDependencies
+  removeIniterDependencies,
+  fileLocations
 } = require('./helpers');
+
+const {
+  askForToken,
+  askIfFirebaseNeeded,
+  askFirebaseCredentials,
+  askAdsumCredentials
+} = require('./promptUtils');
+
+const {
+  addTokenToNpmrc,
+  writeJsonFile,
+  deleteFolderRecursive
+} = require('./fileUtils');
 
 const packageJson = require('../package.json');
 packageJson.scripts = { ...packageJson.scripts, ...scriptsToAdd };
@@ -19,8 +29,13 @@ packageJson.dependencies = { ...packageJson.dependencies, ...dependenciesToAdd }
 
 askForToken()
   .then(addTokenToNpmrc)
+  .then(askIfFirebaseNeeded)
+  .then(askFirebaseCredentials)
+  .then(writeJsonFile.bind(null, fileLocations.firebaseConfigLocation))
+  .then(askAdsumCredentials)
+  .then(writeJsonFile.bind(null, fileLocations.adsumConfigLocation))
   .then(installPackages)
   .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
-  .then(writePackageJson.bind(null, packageJson))
+  .then(writeJsonFile.bind(null, fileLocations.packageJsonLocation, packageJson))
   .then(installPackages)
   .then(deleteFolderRecursive.bind(null, __dirname));

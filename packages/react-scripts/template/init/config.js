@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   scriptsToAdd: {
     serve: "cd build && ws --spa",
@@ -10,5 +12,10 @@ module.exports = {
     "@adactive/adsum-client-api": "^2.0.0",
     "@adactive/adsum-react-native-map": "^5.0.0",
   },
-  dependenciesToRemove: ['npm', 'prompt', 'chalk']
+  dependenciesToRemove: ['npm', 'prompt', 'chalk'],
+  fileLocations: {
+    packageJsonLocation: path.resolve(__dirname, '../package.json'),
+    firebaseConfigLocation: path.resolve(__dirname, '../firebaseConfig.json'),
+    adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json')
+  }
 };
