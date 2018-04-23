@@ -23,7 +23,7 @@ module.exports = {
   dependenciesToRemove: ['npm', 'prompt', 'chalk'],
   fileLocations: {
     packageJsonLocation: path.resolve(__dirname, '../package.json'),
-    firebaseConfigLocation: path.resolve(__dirname, '../firebaseConfig.json'),
-    adsumConfigLocation: path.resolve(__dirname, '../public', 'config-created.json')
+    firebaseConfigLocation: path.resolve(__dirname, '../src/services/firebaseConfig.json'),
+    adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json')
   }
 };
