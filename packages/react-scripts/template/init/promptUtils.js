@@ -71,36 +71,5 @@ module.exports = {
         resolve(firebaseConfig);
       });
     });
-  },
-
-  askAdsumCredentials() {
-    prompt.start();
-
-    return new Promise((resolve, reject) => {
-      prompt.get(adsumCredentialsSchema, function (err, result) {
-        if (err) {
-          console.log(chalk.red(`Error in: ${err}`));
-          reject(err);
-        }
-
-        const adsumConfig = {
-          siteId: result.siteId,
-          map: {
-            deviceId: result.deviceId
-          },
-          api: {
-            endpoint: result.apiEndpoint,
-            site: result.apiSite,
-            username: result.apiUsername,
-            key: result.apiKey
-          }
-        };
-
-        console.log('Your adsum config will look like this: ');
-        console.log(adsumConfig);
-
-        resolve(adsumConfig);
-      });
-    });
   }
 };

@@ -13,8 +13,7 @@ const {
 const {
   askForToken,
   askIfFirebaseNeeded,
-  askFirebaseCredentials,
-  askAdsumCredentials
+  askFirebaseCredentials
 } = require('./promptUtils');
 
 const {
