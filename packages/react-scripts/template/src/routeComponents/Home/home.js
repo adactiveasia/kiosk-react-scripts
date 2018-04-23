@@ -3,6 +3,8 @@ import { push } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { Map } from '../../components/Map';
+
 import './home.css';
 
 type Props = {
@@ -11,9 +13,10 @@ type Props = {
 
 const Home = (props: Props) => (
   <div>
-    <h1>Home</h1>
-    <p>Welcome home!</p>
-    <button onClick={props.changePage}>Go to about page via redux</button>
+      <h1>Home</h1>
+      <p>Welcome home!</p>
+      <button onClick={props.changePage}>Go to about page via redux</button>
+      <Map />
   </div>
 );
 
