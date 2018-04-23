@@ -2,7 +2,6 @@ const prompt = require('prompt');
 const chalk = require('chalk');
 
 const firebaseCredentialsSchema = require('./schemas/firebaseCredentialsSchema');
-const adsumCredentialsSchema = require('./schemas/adsumCredentialsSchema');
 const askNpmTokenSchema = require('./schemas/askNpmTokenSchema');
 const askFirebaseNeedeSchema = require('./schemas/askFirebaseNeededSchema');
 
@@ -45,7 +44,7 @@ module.exports = {
   },
 
   askFirebaseCredentials(isFirebaseRequired) {
-    if (!isFirebaseRequired) return;
+    if (!isFirebaseRequired) return false;
 
     prompt.start();
 
