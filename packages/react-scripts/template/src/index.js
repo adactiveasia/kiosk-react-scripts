@@ -24,10 +24,7 @@ const dom = (
 );
 
 // Load the data
-ACA.entityManager.load().then(() => {
-  	// Retrieve the data you need there
-  	const pois = ACA.entityManager.getRepository('Poi').getAll();
-  	console.log(pois)
+ACA.entityManager.loadFromCache(true).then(() => {
 
   	ReactDOM.render(dom, root);
 

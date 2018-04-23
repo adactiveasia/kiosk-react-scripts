@@ -32,21 +32,7 @@ const options = {
         "site": 339,
         "username": "1056-device",
         "key": "b6e8e6eaf2c7ff66b783e7721a57ed62f204c3bc3a68b729c1ea3a90a7c1e828"
-    },
-    // api: {
-    //     logger: apiLogger,
-    //     apiVersion: '2.3',
-    //     updater: {
-    //         timeoutMsec: 60000,
-    //         maxRetryCount: 5,
-    //         retryDelayMsec: 60000,
-    //         checkSslCertificateAuthorities: true,
-    //         queryFiltersByDomain: {
-    //             file: 'context=texture,texture_occlusion',
-    //             map: 'type=dae,path,model,aoDae'
-    //         }
-    //     }
-    // }
+    }
 };
 
 module.exports = options;
