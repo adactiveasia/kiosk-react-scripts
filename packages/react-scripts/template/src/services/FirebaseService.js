@@ -1,13 +1,9 @@
 import * as firebase from "firebase";
+import firebaseConfig from "./firebaseConfig.json";
 
 class FirebaseService {
     constructor() {
-		const config = {
-		  apiKey: "<API_KEY>",
-		  authDomain: "<PROJECT_ID>.firebaseapp.com",
-		  databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-		  storageBucket: "<BUCKET>.appspot.com",
-		};
+		const config = firebaseConfig;
 		firebase.initializeApp(config);
 
 		firebase.auth().signInAnonymously().catch(function(error) {
