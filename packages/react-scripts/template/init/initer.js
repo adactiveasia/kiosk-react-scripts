@@ -34,7 +34,7 @@ Promise.resolve()
   .then(
     (firebaseConfig) => {
         if(firebaseConfig) {
-            writeJsonFile.bind(null, fileLocations.firebaseConfigLocation)
+            writeJsonFile(fileLocations.firebaseConfigLocation,firebaseConfig)
         }
     }
   )
