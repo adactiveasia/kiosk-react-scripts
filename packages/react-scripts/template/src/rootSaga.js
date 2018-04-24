@@ -1,9 +1,9 @@
-import {spawn} from 'redux-saga/effects';
+import {all} from 'redux-saga/effects';
 
-import mapSaga from "./components/Map/mapSaga";
+import mapSaga from "./components/Map/MapSaga";
 
-export default function* mainSaga() {
-    yield [
-        spawn(mapSaga)
-    ];
+export default function* rootSaga() {
+    yield all([
+        mapSaga()
+    ]);
 }

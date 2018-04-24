@@ -168,8 +168,8 @@ class MapController {
      */
     switchMode(mode) {
         if (mode === "3D") {
-            this.awm.cameraManager.switchTo3D();
-        } else if (mode === "2D") this.awm.cameraManager.switchTo2D();
+            return this.awm.cameraManager.switchTo3D();
+        } else if (mode === "2D") return this.awm.cameraManager.switchTo2D();
     }
 }
 const mapController = new MapController();

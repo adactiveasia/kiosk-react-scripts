@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../rootReducer';
+import rootSaga from '../rootSaga';
 import { routerMiddleware } from '../router';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -27,7 +28,9 @@ const createStoreWithMiddleware = compose(
 
 
 function configureStore(preloadState = initialState) {
-  return createStoreWithMiddleware(rootReducer, preloadState);
+    const store = createStoreWithMiddleware(rootReducer, preloadState);
+    sagaMiddleware.run(rootSaga);
+    return store
 }
 
 const store = configureStore();

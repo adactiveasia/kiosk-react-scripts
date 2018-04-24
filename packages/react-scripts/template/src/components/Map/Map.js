@@ -1,11 +1,25 @@
 import * as React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import './map.css';
 
+import { mapActions } from '../Map';
+
 type Props = {
+    init: () => void
 };
 
-export default (props: Props) => (
-  <map className="map-wrapper">
-    <h1 className="title">Welcome to React</h1>
-  </map>
+const Map = (props: Props) => (
+    <div className="map-wrapper">
+        <div id="adsum-web-map-container"></div>
+    </div>
 );
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    init: () => dispatch(mapActions.init())
+}, dispatch);
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(Map);
