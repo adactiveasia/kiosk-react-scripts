@@ -3,9 +3,9 @@ const path = require('path');
 module.exports = {
   scriptsToAdd: {
     start: "npm run build-css && run-p -ncr watch-css start-js",
-    "start-js": "react-scripts start",
+    "start-js": "node build-conf/rewire-config start",
     build: "run-s -n build-css build-js",
-    "build-js": "react-scripts build",
+    "build-js": "node build-conf/rewire-config build",
     test: "run-s -n build-css test-js",
     "test-js": "react-scripts test --env=jsdom",
     "build-css": "node-less-chokidar src",
@@ -18,7 +18,7 @@ module.exports = {
   },
   dependenciesToAdd: {
     "@adactive/adsum-client-api": "^2.0.0",
-    "@adactive/adsum-web-map": "^5.0.0",
+    "@adactive/adsum-web-map": "^5.0.1-rc.5",
   },
   dependenciesToRemove: ['npm', 'prompt', 'chalk'],
   fileLocations: {
