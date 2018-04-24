@@ -30,8 +30,14 @@ Promise.resolve()
   .then(askForToken)
   .then(addTokenToNpmrc)
   .then(askIfFirebaseNeeded)
-  .then(askFirebaseCredentials)
-  .then(shouldWriteFile => shouldWriteFile && writeJsonFile.bind(null, fileLocations.firebaseConfigLocation))
+  .then(isFirebaseRequired => askFirebaseCredentials(isFirebaseRequired))
+  .then(
+    (firebaseConfig) => {
+        if(firebaseConfig) {
+            writeJsonFile.bind(null, fileLocations.firebaseConfigLocation)
+        }
+    }
+  )
   .then(installPackages)
   .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
   .then(writeJsonFile.bind(null, fileLocations.packageJsonLocation, packageJson))
