@@ -24,7 +24,9 @@ const dom = (
 );
 
 // Load the data
-ACA.entityManager.loadFromCache(true).then(() => {
+ACA.init()
+.then(()=> ACA.entityManager.loadFromCache(true))
+.then(() => {
 
   	ReactDOM.render(dom, root);
 
