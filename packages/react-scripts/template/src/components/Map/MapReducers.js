@@ -12,6 +12,7 @@ const mapReducers = (state = initialState , action) => {
             return {
                 mode: action.mode
             };
+        case mapActionsType.WILL_INIT:
         default:
             return state
     }

@@ -1,4 +1,4 @@
-import { put, select, fork, cancel, cancelled, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, take } from 'redux-saga/effects';
 
 import {types as mapActionTypes} from "./MapActions";
 import mapController from "./MapController";
@@ -20,7 +20,7 @@ function* onSwitchMode(action) {
 
 function* onInit() {
     yield call([mapController, init]);
-
+    console.log("init")
     yield put({
         type: mapActionTypes.DID_INIT,
     });

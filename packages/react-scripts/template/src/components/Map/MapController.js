@@ -23,7 +23,7 @@ class MapController {
      */
     constructor() {
         this.awm = null;
-        this._selectedShape = null;
+        /*this._selectedShape = null;
         this._selectedPlace = null;
 
         this._infoDisplay = null;
@@ -50,9 +50,9 @@ class MapController {
         this._currentPath = null;
         this._blockDrawing = false;
 
-        /*
+        /!*
          * Basic map usage and features
-         */
+         *!/
         this.awmOptions = {
             container: "adsum-web-map-container",
             deviceId: 1056,  // TODO
@@ -90,7 +90,12 @@ class MapController {
             }
         };
 
-        this.awmOptions.entityManager = ACA.entityManager;
+        this.awmOptions.entityManager = ACA.entityManager;*/
+
+        this.adsumLoader = new AdsumLoader({
+            entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
+            deviceId: 1056 // The device Id to use
+        });
 
     }
     /**
@@ -105,6 +110,23 @@ class MapController {
 
         this.awm.dataManager.events.dataDidLoad.add(this.onReady, this);
         this.awm.init();*/
+
+
+        // Create the Map instance
+        this.awm = new AdsumWebMap({
+            loader: this.adsumLoader, // The loader to use
+            engine: {
+                container: document.getElementById('adsum-web-map-container'), // The div DOMElement to insert the canvas into
+            }
+        });
+
+        // Init the Map
+        return this.awm.init().then(() => {
+            console.log('AdsumWebMap is ready to start');
+
+            // Start the rendering
+            return this.awm.start();
+        });
     }
 
     /**

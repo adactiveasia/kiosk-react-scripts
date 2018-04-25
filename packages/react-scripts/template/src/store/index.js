@@ -29,7 +29,8 @@ const createStoreWithMiddleware = compose(
 
 function configureStore(preloadState = initialState) {
     const store = createStoreWithMiddleware(rootReducer, preloadState);
-    sagaMiddleware.run(rootSaga);
+    store.runSaga = sagaMiddleware.run(rootSaga);
+    store.injectedSagas = {}; // Saga registry
     return store
 }
 
