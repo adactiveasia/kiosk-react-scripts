@@ -6,10 +6,6 @@ import { mapActions } from '../Map';
 
 import './map.css';
 
-type Props = {
-    init: () => void
-};
-
 /**
  * Map widget: display map
  * @memberof module:Map
@@ -17,15 +13,10 @@ type Props = {
  * @extends React.Component
  */
 class Map extends React.Component {
-    constructor(props: Props) {
-        super(props);
-    }
-
     /**
      * Initialize map
      */
     componentDidMount() {
-        console.log("componentDidMount")
         this.props.init();
     }
 
