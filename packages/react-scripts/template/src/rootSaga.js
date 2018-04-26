@@ -1,4 +1,4 @@
-import {all} from 'redux-saga/effects';
+import { all } from 'redux-saga/effects';
 
 import mapSaga from "./components/Map/MapSaga";
 

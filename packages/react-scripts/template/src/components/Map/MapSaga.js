@@ -1,23 +1,26 @@
+// @flow
+
 import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
 
-import {types as mapActionTypes} from "./MapActions";
+import { types as mapActionTypes } from "./MapActions";
 import mapController from "./MapController";
 
-const {
-    init,
-} = mapController;
+import type { DidInitAction } from "./MapActions";
+
+const { init } = mapController;
 
 function* onInit() {
-    yield delay(200);
-    yield call([mapController, init]);
-    yield put({
-        type: mapActionTypes.DID_INIT,
-    });
+  const didInitAction: DidInitAction = {
+    type: mapActionTypes.DID_INIT,
+  };
+  yield delay(200);
+  yield call([mapController, init]);
+  yield put(didInitAction);
 }
 
 function* mapSaga() {
-    yield takeLatest(mapActionTypes.WILL_INIT, onInit);
+  yield takeLatest(mapActionTypes.WILL_INIT, onInit);
 }
 
 export default mapSaga;

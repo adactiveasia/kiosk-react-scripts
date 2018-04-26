@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
+
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
@@ -25,12 +26,11 @@ const dom = (
 
 // Load the data
 ACA.init()
-.then(()=> ACA.entityManager.loadFromCache(true))
-.then(() => {
+  .then(() => ACA.entityManager.loadFromCache(true))
+  .then(() => {
+    ReactDOM.render(dom, root);
 
-  	ReactDOM.render(dom, root);
-
-	registerServiceWorker();
-});
+    registerServiceWorker();
+  });
 
 

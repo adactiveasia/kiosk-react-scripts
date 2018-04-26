@@ -1,3 +1,5 @@
+// @flow
+
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
@@ -5,10 +7,12 @@ import rootReducer from '../rootReducer';
 import rootSaga from '../rootSaga';
 import { routerMiddleware } from '../router';
 
+import type { Middleware } from 'redux';
+
 const sagaMiddleware = createSagaMiddleware();
 const initialState = {};
 const enhancers = [];
-const middleware = [
+const middleware: Array<Middleware> = [
   sagaMiddleware,
   routerMiddleware
 ];

@@ -1,9 +1,11 @@
+// @flow
+
 import * as React from 'react';
 import './header.css';
 
-type Props = {
+type Props = {|
   logo: string
-};
+|};
 
 export default (props: Props) => (
   <header className="App-header">
