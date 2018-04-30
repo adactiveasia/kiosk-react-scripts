@@ -4,9 +4,12 @@ import { initialState } from "./initialState";
 const mapReducers = (state = initialState , action) => {
     switch (action.type) {
         case mapActionsType.DID_INIT:
+            const { floors, buildings } = action;
             return {
                 ...state,
                 state: "idle",
+                floors,
+                buildings,
             };
         case mapActionsType.SWITCH_MODE:
             return {

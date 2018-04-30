@@ -3,11 +3,11 @@ const path = require('path');
 module.exports = {
   scriptsToAdd: {
     start: "npm run build-css && run-p -ncr watch-css start-js",
-    "start-js": "node build-conf/rewire-config start",
+    "start-js": "react-app-rewired start --scripts-version @adactive/kiosk-react-scripts",
     build: "run-s -n build-css build-js",
-    "build-js": "node build-conf/rewire-config build",
+    "build-js": "react-app-rewired build --scripts-version @adactive/kiosk-react-scripts",
     test: "run-s -n build-css test-js",
-    "test-js": "react-scripts test --env=jsdom",
+    "test-js": "react-app-rewired test --env=jsdom --scripts-version @adactive/kiosk-react-scripts",
     "build-css": "node-less-chokidar src",
     "watch-css": "node-less-chokidar src --watch",
     serve: "cd build && ws --spa",
@@ -18,7 +18,7 @@ module.exports = {
   },
   dependenciesToAdd: {
     "@adactive/adsum-client-api": "^2.0.0",
-    "@adactive/adsum-web-map": "^5.0.1-rc.5",
+    "@adactive/adsum-web-map": "^5.0.1-rc.7",
   },
   dependenciesToRemove: ['npm', 'prompt', 'chalk'],
   fileLocations: {

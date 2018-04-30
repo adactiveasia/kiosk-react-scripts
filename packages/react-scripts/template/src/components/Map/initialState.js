@@ -9,8 +9,8 @@
 export const initialState = {
     state: "initial",
     mode: "3D",
-    buildings: [],
-    floors: [],
+    buildings: null,
+    floors: null,
     zoom: {
         current: 0,
         max: 0,
