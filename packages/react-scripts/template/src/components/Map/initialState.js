@@ -17,11 +17,11 @@ export const initialState = {
         min: 0,
     },
     currentFloor: null,
+    previousFloor: null,
     currentPath: {
 
     },
-    currentClickedObject: null,
-    currentSelection: [],
+    currentClickedEvent: null,
     cameraMoved: false,
     sortedPlaces: [],
 };

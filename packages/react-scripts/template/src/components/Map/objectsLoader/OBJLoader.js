@@ -335,13 +335,13 @@ function ParserState() {
             var vLen = this.vertices.length;
             var uvLen = this.uvs.length;
 
-            for ( var vi = 0, l = vertices.length; vi < l; vi ++ ) {
+            for ( let vi = 0, l = vertices.length; vi < l; vi ++ ) {
 
                 this.addVertexLine( this.parseVertexIndex( vertices[ vi ], vLen ) );
 
             }
 
-            for ( var uvi = 0, l = uvs.length; uvi < l; uvi ++ ) {
+            for ( let uvi = 0, l = uvs.length; uvi < l; uvi ++ ) {
 
                 this.addUVLine( this.parseUVIndex( uvs[ uvi ], uvLen ) );
 
@@ -473,6 +473,7 @@ class OBJLoader {
                             parseFloat( data[ 2 ] )
                         );
                         break;
+                    default: break;
 
                 }
 
@@ -501,7 +502,7 @@ class OBJLoader {
 
                 var v1 = faceVertices[ 0 ];
 
-                for ( var j = 1, jl = faceVertices.length - 1; j < jl; j ++ ) {
+                for ( let j = 1, jl = faceVertices.length - 1; j < jl; j ++ ) {
 
                     var v2 = faceVertices[ j ];
                     var v3 = faceVertices[ j + 1 ];
@@ -539,7 +540,7 @@ class OBJLoader {
 
             } else if ( lineFirstChar === 'p' ) {
 
-                var lineData = line.substr( 1 ).trim();
+                let lineData = line.substr( 1 ).trim();
                 var pointData = lineData.split( " " );
 
                 state.addPointGeometry( pointData );
@@ -622,7 +623,7 @@ class OBJLoader {
         var container = new three.Group();
         container.materialLibraries = [].concat( state.materialLibraries );
 
-        for ( var i = 0, l = state.objects.length; i < l; i ++ ) {
+        for ( let i = 0, l = state.objects.length; i < l; i ++ ) {
 
             var object = state.objects[ i ];
             var geometry = object.geometry;
@@ -668,7 +669,7 @@ class OBJLoader {
             for ( var mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
 
                 var sourceMaterial = materials[ mi ];
-                var material = undefined;
+                let material = undefined;
 
                 if ( this.materials !== null ) {
 
@@ -725,9 +726,9 @@ class OBJLoader {
 
             if ( createdMaterials.length > 1 ) {
 
-                for ( var mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
+                for ( let mi = 0, miLen = materials.length; mi < miLen; mi ++ ) {
 
-                    var sourceMaterial = materials[ mi ];
+                    let sourceMaterial = materials[ mi ];
                     buffergeometry.addGroup( sourceMaterial.groupStart, sourceMaterial.groupCount, mi );
 
                 }

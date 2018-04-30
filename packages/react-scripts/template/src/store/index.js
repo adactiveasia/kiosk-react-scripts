@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../rootReducer';
@@ -9,8 +10,9 @@ const sagaMiddleware = createSagaMiddleware();
 const initialState = {};
 const enhancers = [];
 const middleware = [
-  sagaMiddleware,
-  routerMiddleware
+    sagaMiddleware,
+    thunk,
+    routerMiddleware
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -30,7 +32,6 @@ const createStoreWithMiddleware = compose(
 function configureStore(preloadState = initialState) {
     const store = createStoreWithMiddleware(rootReducer, preloadState);
     store.runSaga = sagaMiddleware.run(rootSaga);
-    store.injectedSagas = {}; // Saga registry
     return store
 }
 

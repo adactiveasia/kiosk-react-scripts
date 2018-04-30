@@ -86,10 +86,7 @@ class ObjectsLoader {
         position = floor.worldToLocal(position.clone());
         if (obj) {
             obj.visible = true;
-            obj.scale.set(10, 10, 10);
-            obj.rotateX(Math.PI / 2);
             obj.position.copy(position);
-            obj.position.z += 200;
             floor.add(obj);
             return obj;
         }

@@ -1,9 +1,12 @@
-import { AdsumWebMap, AdsumLoader, DISPLAY_MODE } from '@adactive/adsum-web-map';
+import { AdsumWebMap, AdsumLoader, DISPLAY_MODE  } from '@adactive/adsum-web-map';
 import * as three from 'three';
 import ACA from "../../services/ClientAPI";
 import deviceConfig from '../../services/Config';
 
 import sceneController from './controllers/SceneController';
+import selectionController from './controllers/SelectionController';
+import pathController from './controllers/PathController';
+import timeController from './controllers/TimeController';
 
 import LightsBuilder from "./lights/LightsBuilder";
 import LightsBuilderOptions from "./lights/LightsBuilderOptions";
@@ -45,6 +48,9 @@ class MapController {
         });
 
         sceneController.init(this.awm);
+        selectionController.init(this.awm);
+        pathController.init(this.awm);
+        timeController.init(this.awm);
         this.objectsLoader = new ObjectsLoader(this.awm);
 
         window.awm = this.awm;
@@ -55,6 +61,7 @@ class MapController {
         return this.awm.init().then(() => {
             console.log('AdsumWebMap is ready to start');
 
+            /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
             const lightsToRemove = [];
             for(const child of this.awm.sceneManager.scene.children){
                 if(child.isLight){
@@ -82,7 +89,6 @@ class MapController {
             window.toto = texture;
             texture.wrapS = three.RepeatWrapping;
             texture.wrapT = three.RepeatWrapping;
-            //texture.repeat.set(0.0008, 0.001);
             texture.repeat.set(20,20);
 
             this.awm.objectManager.site._mesh.material = new three.MeshPhongMaterial({
@@ -93,14 +99,25 @@ class MapController {
                 side: three.DoubleSide
             });
 
-            for(const child of this.awm.sceneManager.scene.children){
-                if(!child.isLight) {
-                    child.castShadow = true;
-                }
-            }
+            this.objectsLoader.createJSON3DObj('assets/3dModels/painted.json').then(
+                (basketball) => {
+                    const basketballClone = this.objectsLoader.add3DObjectOnFloor(null, new three.Vector3(-200,500,8), basketball.clone());
+                    basketballClone.scale.set(35, 35, 35);
+                    //window.foo = basketballClone;
 
+                    for(const child of basketballClone.children) {
+                        if(!child.isLight) {
+                            child.castShadow = true;
+                        }
+                    }
+
+                    basketballClone.updateMatrixWorld();
+                }
+            );
 
             this.buildingOpacity();
+
+            /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
 
             // Start the rendering
             return this.awm.start();
@@ -125,15 +142,6 @@ class MapController {
 
             }
         )
-    }
-
-    /*------------------------------------ FUNCTIONS: BEHAVIOUR TO EXECUTE FOR CLICK/HOVER BEHAVIOURS  --------------------------------------------*/
-
-    /**
-     * Binding map actions to execute upon user interaction with map
-     */
-    initMapEvents() {
-
     }
 
     /*------------------------------------ FUNCTIONS: MAP CONTROL  --------------------------------------------*/
