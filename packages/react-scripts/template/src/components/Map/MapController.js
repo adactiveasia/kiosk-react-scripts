@@ -5,7 +5,7 @@ import deviceConfig from '../../services/Config';
 
 import sceneController from './controllers/SceneController';
 import selectionController from './controllers/SelectionController';
-import pathController from './controllers/PathController';
+import wayfindingController from './controllers/WayfindingController';
 import timeController from './controllers/TimeController';
 
 import LightsBuilder from "./lights/LightsBuilder";
@@ -44,14 +44,15 @@ class MapController {
             engine: {
                 container: document.getElementById('adsum-web-map-container'), // The div DOMElement to insert the canvas into
                 shadowEnabled: true,
+            },
+            wayfinding: {
+                patternSpace: 1,
+                patternSize: 0.5,
+                createPathPattern: wayfindingController.createPathPattern.bind(wayfindingController)
             }
         });
 
-        sceneController.init(this.awm);
-        selectionController.init(this.awm);
-        pathController.init(this.awm);
-        timeController.init(this.awm);
-        this.objectsLoader = new ObjectsLoader(this.awm);
+
 
         window.awm = this.awm;
         window.three = three;
@@ -59,6 +60,13 @@ class MapController {
 
         // Init the Map
         return this.awm.init().then(() => {
+
+            sceneController.init(this.awm);
+            selectionController.init(this.awm);
+            wayfindingController.init(this.awm);  // TODO ASYNC
+            timeController.init(this.awm);
+            this.objectsLoader = new ObjectsLoader(this.awm);
+
             console.log('AdsumWebMap is ready to start');
 
             /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/

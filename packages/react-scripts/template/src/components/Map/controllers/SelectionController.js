@@ -1,4 +1,4 @@
-import pathController from './PathController';
+import wayfindingController from './WayfindingController';
 
 class SelectionController {
     constructor() {
@@ -68,14 +68,16 @@ class SelectionController {
         } else if (this.current !== null && this.current.isSpace) {
             this.locked = true;
             this.highlightSpace(this.current)
-            .then(() => pathController.goTo(this.current))  // TODO
+            .then(() => this.awm.setDeviceId(1082))  // TODO
+            .then(() => wayfindingController.goTo(this.current))  // TODO
             .then(() => {
                 this.locked = false;
             });
         } else if (this.current !== null && this.current.isLabel) {
             this.locked = true;
             this.highlightLabel(this.current)
-            .then(() => pathController.goTo(this.current)) // TODO
+            .then(() => this.awm.setDeviceId(1082)) // TODO
+            .then(() => wayfindingController.goTo(this.current)) // TODO
             .then(() => {
                 this.locked = false;
             });

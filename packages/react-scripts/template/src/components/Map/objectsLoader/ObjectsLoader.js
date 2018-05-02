@@ -39,7 +39,7 @@ class ObjectsLoader {
             loader.load(
                 url,
                 resolve,
-                undefined,
+                () => {},
                 reject,
             );
         });
@@ -57,7 +57,7 @@ class ObjectsLoader {
                  loader.load(
                  url,
                  resolve,
-                 undefined,
+                 () => {},
                  reject,
              );
          });
