@@ -18,7 +18,7 @@ module.exports = {
   },
   dependenciesToAdd: {
     "@adactive/adsum-client-api": "^2.0.0",
-    "@adactive/adsum-web-map": "^5.0.1-rc.7",
+    "@adactive/adsum-web-map": "^5.0.1-rc.9",
   },
   dependenciesToRemove: ['npm', 'prompt', 'chalk'],
   fileLocations: {

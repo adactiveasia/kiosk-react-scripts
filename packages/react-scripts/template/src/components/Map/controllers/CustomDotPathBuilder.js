@@ -1,6 +1,8 @@
-import { Group, Vector3 } from 'three';
+import { Scene, Group, Vector3 } from 'three';
 import { PathSectionObject  } from '@adactive/adsum-web-map';
 import PathSection from './PathSection';
+
+import ObjectsLoader from "../objectsLoader/ObjectsLoader";
 
 class CustomDotPathBuilder {
   constructor() {
@@ -27,19 +29,55 @@ class CustomDotPathBuilder {
 
       this.mergePathSectionObject = [];
       this.mergePathSections = null;
+
+      this.objectsLoader = null;
+      this.pathPattern = null;
   }
 
   /**
    * @package
    *
-   * @param {AdsumWebMap} awm
+   * @param {AdsumProjector} projector
+   * @param {ObjectManager} objectManager
    */
-  init(awm) {
-      this.awm = awm;
-      this.projector = this.awm.wayfindingManager.dotPathBuilder.projector;
-      this.objectManager = this.awm.wayfindingManager.dotPathBuilder.objectManager;
-      this.options = this.awm.wayfindingManager.dotPathBuilder.options;
+  init(projector, objectManager) {
+      this.projector = projector;
+      this.objectManager = objectManager;
   }
+
+  initer(awm) {
+      this.awm = awm;
+      this.objectsLoader = new ObjectsLoader(this.awm);
+      this.options = {
+          patternSpace: 1,
+          patternSize: 0.5,
+      };
+      this.loadPathPattern();
+  }
+
+
+    loadPathPattern() { // TODO params
+        this.objectsLoader.createJSON3DObj('assets/3dModels/path_default.json').then(
+            (pathPattern) => {
+                if (pathPattern instanceof Scene && pathPattern.children.length === 1) {
+                    const group = new Group();
+                    group.add(pathPattern.children[0]);
+                    pathPattern = group;
+                }
+                pathPattern.scale.multiplyScalar(10); // TODO
+                pathPattern.traverse((obj) => {
+
+                    if(obj.name === "outline") {
+                        obj.position.set(0.05, 0.68, -0.33);
+                    }
+                    obj.updateMatrixWorld();
+                });
+                this.pathPattern = pathPattern;
+
+            }
+        )
+    }
+
   /**
    * @package
    *
@@ -65,7 +103,7 @@ class CustomDotPathBuilder {
       const nextPoint = points[i + 1].position;
       const ground = points[i].ground;
 
-      const pattern = this.awm.wayfindingManager.dotPathBuilder._createPattern();
+      const pattern = this.pathPattern.clone();
       pattern.position.copy(point);
 
       const direction = nextPoint.clone().sub(pattern.position);

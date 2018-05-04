@@ -1,6 +1,4 @@
-import {Scene, Group} from 'three';
 import { Path  } from '@adactive/adsum-web-map';
-import ObjectsLoader from "../objectsLoader/ObjectsLoader";
 import PathSectionDrawer from "./PathSectionDrawer";
 import sceneController from './SceneController';
 
@@ -12,39 +10,13 @@ class WayfindingController {
         this.awm = null;
         this.current = null;
         this.locked = false;
-        this.objectsLoader = null;
-        this.pathPattern = null;
     }
 
     init(awm) { // TODO ASYNC
         this.awm = awm;
-        this.objectsLoader = new ObjectsLoader(this.awm);
-        customDotPathBuilder.init(awm); // TODO
-        this.loadPathPattern();  // TODO ASYNC
+        customDotPathBuilder.initer(awm); // TODO
         this.loadUserObject();  // TODO ASYNC
         return this;
-    }
-
-    loadPathPattern() { // TODO params
-        this.objectsLoader.createJSON3DObj('assets/3dModels/path_default.json').then(
-            (pathPattern) => {
-                if (pathPattern instanceof Scene && pathPattern.children.length === 1) {
-                    const group = new Group();
-                    group.add(pathPattern.children[0]);
-                    pathPattern = group;
-                }
-                pathPattern.scale.multiplyScalar(10); // TODO
-                pathPattern.traverse((obj) => {
-
-                    if(obj.name === "outline") {
-                        obj.position.set(0.05, 0.68, -0.33);
-                    }
-                    obj.updateMatrixWorld();
-                });
-                this.pathPattern = pathPattern;
-
-            }
-        )
     }
 
     loadUserObject() {
@@ -60,10 +32,6 @@ class WayfindingController {
                 return this.awm.setDeviceId(1062, false); // TODO
             }
         );
-    }
-
-    createPathPattern() {
-        return this.pathPattern.clone();
     }
 
     goTo(object) {

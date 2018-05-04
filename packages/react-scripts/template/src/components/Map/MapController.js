@@ -13,6 +13,8 @@ import LightsBuilderOptions from "./lights/LightsBuilderOptions";
 
 import ObjectsLoader from "./objectsLoader/ObjectsLoader";
 
+import customDotPathBuilder from "./controllers/CustomDotPathBuilder";
+
 /**
  * @memberof module:Map
  * @class
@@ -46,9 +48,10 @@ class MapController {
                 shadowEnabled: true,
             },
             wayfinding: {
-                patternSpace: 1,
-                patternSize: 0.5,
-                createPathPattern: wayfindingController.createPathPattern.bind(wayfindingController)
+               /* patternSpace: 1,
+                 patternSize: 0.5,
+                 createPathPattern: wayfindingController.createPathPattern.bind(wayfindingController)*/
+                pathBuilder: customDotPathBuilder
             }
         });
 
