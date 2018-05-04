@@ -5,6 +5,7 @@ import PathSectionDrawer from "./PathSectionDrawer";
 import sceneController from './SceneController';
 
 import CustomUserObject from "./CustomUserObject";
+import customDotPathBuilder from "./CustomDotPathBuilder";
 
 class WayfindingController {
     constructor() {
@@ -18,6 +19,7 @@ class WayfindingController {
     init(awm) { // TODO ASYNC
         this.awm = awm;
         this.objectsLoader = new ObjectsLoader(this.awm);
+        customDotPathBuilder.init(awm); // TODO
         this.loadPathPattern();  // TODO ASYNC
         this.loadUserObject();  // TODO ASYNC
         return this;
@@ -33,10 +35,14 @@ class WayfindingController {
                 }
                 pathPattern.scale.multiplyScalar(10); // TODO
                 pathPattern.traverse((obj) => {
-                    obj.rotation.set(Math.PI/2,0,0);
+
+                    if(obj.name === "outline") {
+                        obj.position.set(0.05, 0.68, -0.33);
+                    }
                     obj.updateMatrixWorld();
                 });
                 this.pathPattern = pathPattern;
+
             }
         )
     }
@@ -51,7 +57,7 @@ class WayfindingController {
         ).then(
             (customUserObject)=> {
                 this.awm.objectManager.user = customUserObject;
-                return this.awm.setDeviceId(1062); // TODO
+                return this.awm.setDeviceId(1062, false); // TODO
             }
         );
     }
@@ -75,11 +81,13 @@ class WayfindingController {
         // Compute the path to find the shortest path
         return this.awm.wayfindingManager.computePath(this.current)
             .then(() => {
+
+                customDotPathBuilder.buildMerged(this.current.pathSections);
+
                 // The path is computed, and we have now access to path.pathSections which represents all steps
                 // We will chain our promises
                 let promise = Promise.resolve();
                 for(const pathSection of this.current.pathSections) {
-
                     // Do the floor change
                     const floor = pathSection.ground.isFloor ? pathSection.ground : null;
                     //promise = promise.then(() => this.awm.sceneManager.setCurrentFloor(floor));
@@ -92,7 +100,7 @@ class WayfindingController {
 
                     // Add a delay of 1.5 seconds
                     promise = promise.then(() => new Promise((resolve) => {
-                        setTimeout(resolve, 1500);
+                        setTimeout(resolve, 1000);
                     }));
                 }
 
@@ -103,9 +111,9 @@ class WayfindingController {
     drawPathSection(pathSection) {
         this.awm.wayfindingManager.removePathSection(pathSection);
 
-        const pathSectionObject = this.awm.wayfindingManager.dotPathBuilder.build(pathSection);
+        const pathSectionObject = customDotPathBuilder.build(pathSection);
 
-        const drawer = new PathSectionDrawer(
+       const drawer = new PathSectionDrawer(
             pathSectionObject,
             this.awm.cameraManager,
             this.awm.wayfindingManager.projector,

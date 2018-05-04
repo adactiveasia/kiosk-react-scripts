@@ -1,6 +1,4 @@
 import { Tween, Easing } from 'es6-tween';
-import { Vector3 } from 'three';
-
 
 class PathSectionDrawer {
     constructor(pathSectionObject, cameraManager, projector) {
@@ -36,6 +34,7 @@ class PathSectionDrawer {
          */
         this.center = false; // TODO
         this.tweens = [];
+
     }
 
     /**
@@ -47,7 +46,6 @@ class PathSectionDrawer {
     draw() {
         const tasks = [];
         const patterns = this.pathSectionObject._mesh.children;
-
         for (let i = 0; i < patterns.length; i++) {
             const spaceInMeter = this.projector.adsumDistanceToMeter(this.pathSectionObject.patternSpace);
             const delay = spaceInMeter / this.speed * i * 1000;
@@ -84,10 +82,7 @@ class PathSectionDrawer {
     _showPattern(index, delay) {
         /*------------------------------------ INIT --------------------------------------------*/
         const pattern = this.pathSectionObject._mesh.children[index];
-        if(index < this.pathSectionObject._mesh.children.length - 1) { // TODO Not nice
-            const nextPattern = this.pathSectionObject._mesh.children[index];
-            pattern.lookAt(new Vector3(nextPattern.position.x, nextPattern.position.y, nextPattern.position.z));
-        }
+
         const opacityHandler = {
             opacity: 0,
         };

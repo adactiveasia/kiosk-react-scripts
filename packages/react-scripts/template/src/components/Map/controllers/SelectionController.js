@@ -1,4 +1,5 @@
 import wayfindingController from './WayfindingController';
+import mapController from '../MapController';
 
 class SelectionController {
     constructor() {
@@ -68,7 +69,7 @@ class SelectionController {
         } else if (this.current !== null && this.current.isSpace) {
             this.locked = true;
             this.highlightSpace(this.current)
-            .then(() => this.awm.setDeviceId(1082))  // TODO
+            .then(() => mapController.setDeviceIdCustom(1082))  // TODO Customize for decathlon
             .then(() => wayfindingController.goTo(this.current))  // TODO
             .then(() => {
                 this.locked = false;
@@ -76,7 +77,7 @@ class SelectionController {
         } else if (this.current !== null && this.current.isLabel) {
             this.locked = true;
             this.highlightLabel(this.current)
-            .then(() => this.awm.setDeviceId(1082)) // TODO
+            .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
             .then(() => wayfindingController.goTo(this.current)) // TODO
             .then(() => {
                 this.locked = false;
@@ -96,7 +97,8 @@ class SelectionController {
     }
 
     highlightSpace(space) {
-        return this.awm.cameraManager.centerOn(space)
+        //return this.awm.cameraManager.centerOn(space)
+        return Promise.resolve()
         .then(() => {
             space.setColor(0x78e08f);
             space.bounceUp(3);

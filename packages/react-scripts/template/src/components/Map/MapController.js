@@ -70,6 +70,15 @@ class MapController {
             console.log('AdsumWebMap is ready to start');
 
             /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
+
+            const backgroundTextureLoader = new three.TextureLoader();
+            backgroundTextureLoader.crossOrigin = '';
+            const backgroundTexture = backgroundTextureLoader.load('assets/textures/background.png');
+            backgroundTexture.wrapS = three.RepeatWrapping;
+            backgroundTexture.wrapT = three.RepeatWrapping;
+            backgroundTexture.repeat.set(1,1);
+            this.awm.sceneManager.scene.background = backgroundTexture;
+
             const lightsToRemove = [];
             for(const child of this.awm.sceneManager.scene.children){
                 if(child.isLight){
@@ -94,7 +103,6 @@ class MapController {
             loader.crossOrigin = '';
             const texture = loader.load('assets/textures/ground.png');
 
-            window.toto = texture;
             texture.wrapS = three.RepeatWrapping;
             texture.wrapT = three.RepeatWrapping;
             texture.repeat.set(20,20);
@@ -125,6 +133,15 @@ class MapController {
 
             this.buildingOpacity();
 
+            this.awm.objectManager.spaces.forEach(
+                (space)=>{
+                    if(space.isSpace) {
+                        this._wireFrameAShape(space, 0, 0x5a5b5a);
+                        space._mesh.material.specular = new three.Color(0x53adc6);
+                        space._mesh.material.shininess = 5;
+                    }
+                }
+            );
             /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
 
             // Start the rendering
@@ -132,6 +149,40 @@ class MapController {
         });
     }
 
+    setDeviceIdCustom(deviceId, animated = true) {
+        this.awm.deviceId = deviceId;
+        this.awm.defaultFloor = null;
+
+        return this.awm.loader.loadCalibration(this.awm.deviceId)
+            .then(({ cameraCalibrations, defaultFloorId, userPosition }) => {
+                if (userPosition !== null) {
+                    if (userPosition.floorId === null) {
+                        this.awm.wayfindingManager.setUserAdsumPosition(
+                            userPosition.position,
+                            null,
+                            true,
+                        );
+                    } else {
+                        this.awm.wayfindingManager.setUserAdsumPosition(
+                            userPosition.position,
+                            this.awm.objectManager.getFloor(userPosition.floorId),
+                            true,
+                        );
+                    }
+                }
+
+                this.awm.cameraManager.setCameraCalibrations(cameraCalibrations);
+                if (defaultFloorId !== null) {
+                    this.awm.defaultFloor = this.awm.objectManager.getFloor(defaultFloorId);
+                }
+
+                return sceneController.setCurrentFloorCustom(this.awm.defaultFloor, animated); // TODO Customize for decathlon
+            })
+            .then(() => {
+                return this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, animated);
+            })
+            .then(() => {}); // Ensure void result
+    }
 
     buildingOpacity() {
         this.awm.objectManager.buildings.forEach(
@@ -150,6 +201,14 @@ class MapController {
 
             }
         )
+    }
+
+    _wireFrameAShape(space, opacity = 0.7, matColor = null, needBoundingBox = false) {
+
+        const geo = new three.EdgesGeometry( space._mesh.geometry ); // or WireframeGeometry
+        const mat = new three.LineBasicMaterial( { color: matColor, linewidth: 1 } );
+        const wireFrame = new three.LineSegments( geo, mat );
+        space._mesh.add( wireFrame );
     }
 
     /*------------------------------------ FUNCTIONS: MAP CONTROL  --------------------------------------------*/

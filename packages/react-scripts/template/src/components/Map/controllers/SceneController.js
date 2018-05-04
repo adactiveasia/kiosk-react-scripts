@@ -3,7 +3,6 @@ import { SCENE_EVENTS, DISPLAY_MODE  } from '@adactive/adsum-web-map';
 class SceneController {
     constructor() {
         this.awm = null;
-        this.currentFloor = null;
     }
 
     init(awm) {
@@ -29,8 +28,8 @@ class SceneController {
         return this.setCurrentFloorCustom(floorObject);
     }
 
-    setCurrentFloorCustom(floor, animated = true) {
-        if (floor === this.currentFloor) {
+    setCurrentFloorCustom(floor, animated = true) {  // TODO to Clean
+        if (floor === this.awm.sceneManager.currentFloor) {
             return Promise.resolve();
         }
 
@@ -40,28 +39,27 @@ class SceneController {
                     console.warn('AdsumWebMap.SceneManager.setCurrentFloor: animated parameter is not supported yet');
                 }
 
-                if (this.currentFloor === null) {
+                if (this.awm.sceneManager.currentFloor === null) {
                     //this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
                     this.awm.objectManager.buildings.forEach((building) => {
                         //building.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
                     });
                 } else {
-                    this.currentFloor.setDisplayMode(DISPLAY_MODE.NONE);
+                    //this.awm.sceneManager.currentFloor.setDisplayMode(DISPLAY_MODE.NONE);
                 }
 
                 if (floor === null) {
-                    this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.VISIBLE);
+                    //this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.VISIBLE);
                     this.awm.objectManager.buildings.forEach((building) => {
-                        building.setDisplayMode(DISPLAY_MODE.VISIBLE);
+                        //building.setDisplayMode(DISPLAY_MODE.VISIBLE);
                     });
                 } else {
                     //floor.setDisplayMode(DISPLAY_MODE.VISIBLE);
                 }
 
-                const previous = this.currentFloor;
-                this.currentFloor = floor;
+                const previous = this.awm.sceneManager.currentFloor;
 
-                this.awm.sceneManager.currentFloor = floor; // TODO
+                this.awm.sceneManager.currentFloor = floor;
 
                 this.awm.sceneManager.dispatchEvent(
                     {
