@@ -20,6 +20,10 @@ class Map extends React.Component {
         this.props.init();
     }
 
+    componentDidUpdate() {
+
+    }
+
     render() {
         return (
             <div className="map-wrapper">
@@ -34,7 +38,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    init: () => dispatch(mapActions.init())
+    init: () => dispatch(mapActions.init()),
+    changeFloor: () => dispatch(mapActions.changeFloor(1)),
 }, dispatch);
 
 export default connect(

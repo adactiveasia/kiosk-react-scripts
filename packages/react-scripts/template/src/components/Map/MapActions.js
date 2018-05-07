@@ -1,3 +1,5 @@
+import selectionController from './controllers/SelectionController';
+
 /**
  * Map actions types
  * @memberof! module:Map#
@@ -10,6 +12,9 @@ export const types = {
     WILL_INIT: 'map/WILL_INIT',
     DID_INIT: 'map/DID_INIT',
     SWITCH_MODE: 'map/SWITCH_MODE',
+    FLOOR_WILL_CHANGE: 'map/FLOOR_WILL_CHANGE',
+    FLOOR_DID_CHANGE: 'map/FLOOR_DID_CHANGE',
+    ON_CLICK: 'map/ON_CLICK',
 };
 
 
@@ -21,7 +26,7 @@ export const types = {
  */
 export const init = () => {
     return {
-        type: types.WILL_INIT
+        type: types.WILL_INIT,
     }
 };
 
@@ -39,3 +44,45 @@ export const switchMode = () => {
         mode
     }
 };
+
+/**
+ * Change floor
+ * @function <i>mapActions</i> <strong>changeFloor</strong>
+ * @memberof! module:Map#
+ * @returns {object}
+ */
+export const changeFloor = (floorID) => {
+    return {
+        type: types.FLOOR_WILL_CHANGE,
+        floorID
+    }
+};
+
+/**
+ * floor did change
+ * @function <i>mapActions</i> <strong>floorDidChanged</strong>
+ * @memberof! module:Map#
+ * @returns {object}
+ */
+export const floorDidChanged = (currentFloor,previousFloor) => {
+    return {
+        type: types.FLOOR_DID_CHANGE,
+        currentFloor,
+        previousFloor,
+    }
+};
+
+/**
+ * Trigger on click on the map
+ * @function <i>mapActions</i> <strong>onClick</strong>
+ * @memberof! module:Map#
+ * @returns {object}
+ */
+export const onClick = (getEventMethod) => {
+    selectionController.onClick();
+    return {
+        type: types.ON_CLICK,
+        currentClickedEvent: getEventMethod
+    }
+};
+

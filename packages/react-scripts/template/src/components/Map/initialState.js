@@ -9,19 +9,19 @@
 export const initialState = {
     state: "initial",
     mode: "3D",
-    buildings: [],
-    floors: [],
+    buildings: null,
+    floors: null,
     zoom: {
         current: 0,
         max: 0,
         min: 0,
     },
     currentFloor: null,
+    previousFloor: null,
     currentPath: {
 
     },
-    currentClickedObject: null,
-    currentSelection: [],
+    currentClickedEvent: null,
     cameraMoved: false,
     sortedPlaces: [],
 };
