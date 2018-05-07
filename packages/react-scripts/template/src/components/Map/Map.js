@@ -15,7 +15,8 @@ type MappedStateProps = {|
   mapState: MapState
 |};
 type MappedDispatchProps = {|
-  init: () => void
+  init: () => void,
+  changeFloor: () => void,
 |};
 type OwnProps = {||};
 type Props = MappedStateProps & MappedDispatchProps & OwnProps;
@@ -47,7 +48,8 @@ const mapStateToProps = (state: AppState): MappedStateProps => ({
 });
 
 const mapDispatchToProps = (dispatch): MappedDispatchProps => bindActionCreators({
-  init: () => dispatch(mapActions.init())
+  init: () => dispatch(mapActions.init()),
+  changeFloor: () => dispatch(mapActions.changeFloor(1)),
 }, dispatch);
 
 export default connect(

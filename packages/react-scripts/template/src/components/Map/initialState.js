@@ -6,19 +6,19 @@ export type MapZoom = {|
   min: number
 |};
 export type MapMode = '2D' | '3D';
-export type MapState = 'initial' | 'idle';
+export type MapState = 'initial' | 'idle' | 'transition' | 'pause';
 export type MapReducerState = {|
   +state: MapState,
   +mode: MapMode,
-  +buildings: Array<number>,
-  +floors: Array<number>,
+  +buildings: any,
+  +floors: any,
   +zoom: MapZoom,
   +currentFloor: ?number,
+  +previousFloor: ?number,
   +currentPath: {
 
   },
-  +currentClickedObject: ?Object,
-  +currentSelection: Array<Object>,
+  +currentClickedEvent: ?Object,
   +cameraMoved: boolean,
   +sortedPlaces: Array<Object>,
 |};
@@ -34,19 +34,19 @@ export type MapReducerState = {|
 export const initialState: MapReducerState = {
   state: "initial",
   mode: "3D",
-  buildings: [],
-  floors: [],
+  buildings: null,
+  floors: null,
   zoom: {
     current: 0,
     max: 0,
     min: 0,
   },
   currentFloor: null,
+  previousFloor: null,
   currentPath: {
 
   },
-  currentClickedObject: null,
-  currentSelection: [],
+  currentClickedEvent: null,
   cameraMoved: false,
   sortedPlaces: []
 };
