@@ -1,17 +1,20 @@
-import * as firebase from "firebase";
-import firebaseConfig from "./firebaseConfig.json";
+// @flow
+
+import * as firebase from 'firebase';
+import firebaseConfig from './firebaseConfig.json';
 
 class FirebaseService {
     constructor() {
-		const config = firebaseConfig;
-		firebase.initializeApp(config);
+        const config = firebaseConfig;
 
-		firebase.auth().signInAnonymously().catch(function(error) {
-		  // Handle Errors here.
-		  const errorCode = error.code;
-		  const errorMessage = error.message;
-		  // ...
-		});
+        firebase.initializeApp(config);
+
+        firebase.auth().signInAnonymously().catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ...
+        });
     }
 }
 

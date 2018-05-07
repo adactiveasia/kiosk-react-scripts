@@ -1,11 +1,12 @@
+// @flow
+
 import { AbstractOptions } from '@adactive/adactive-abstract-options';
-import {Color} from "three";
+import { Color } from 'three';
 
 /**
  * @extends AbstractOptions
  */
 class AmbientLightsBuilderOptions extends AbstractOptions {
-
     reset() {
         super.reset();
 

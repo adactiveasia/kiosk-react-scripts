@@ -1,3 +1,5 @@
+// @flow
+
 import wayfindingController from './WayfindingController';
 import mapController from '../MapController';
 
@@ -23,7 +25,7 @@ class SelectionController {
     }
 
     onClick() {
-        const {intersects} = this.onClickEvent;
+        const { intersects } = this.onClickEvent;
         if (intersects.length === 0) {
             this.updateSelection(null);
             return;
@@ -69,27 +71,27 @@ class SelectionController {
         } else if (this.current !== null && this.current.isSpace) {
             this.locked = true;
             this.highlightSpace(this.current)
-            .then(() => mapController.setDeviceIdCustom(1082))  // TODO Customize for decathlon
-            .then(() => wayfindingController.goTo(this.current))  // TODO
-            .then(() => {
-                this.locked = false;
-            });
+                .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
+                .then(() => wayfindingController.goTo(this.current)) // TODO
+                .then(() => {
+                    this.locked = false;
+                });
         } else if (this.current !== null && this.current.isLabel) {
             this.locked = true;
             this.highlightLabel(this.current)
-            .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
-            .then(() => wayfindingController.goTo(this.current)) // TODO
-            .then(() => {
-                this.locked = false;
-            });
+                .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
+                .then(() => wayfindingController.goTo(this.current)) // TODO
+                .then(() => {
+                    this.locked = false;
+                });
         }
     }
 
     highlightBuilding(building) {
         return this.awm.cameraManager.centerOn(building)
-        .then(() => {
-            building.setColor(0x78e08f);
-        });
+            .then(() => {
+                building.setColor(0x78e08f);
+            });
     }
 
     resetBuilding(building) {
@@ -97,12 +99,12 @@ class SelectionController {
     }
 
     highlightSpace(space) {
-        //return this.awm.cameraManager.centerOn(space)
+        // return this.awm.cameraManager.centerOn(space)
         return Promise.resolve()
-        .then(() => {
-            space.setColor(0x78e08f);
-            space.bounceUp(3);
-        });
+            .then(() => {
+                space.setColor(0x78e08f);
+                space.bounceUp(3);
+            });
     }
 
     highlightLabel(label) {
@@ -113,7 +115,6 @@ class SelectionController {
         space.resetColor();
         space.bounceDown();
     }
-
 }
 
 const selectionController = new SelectionController();

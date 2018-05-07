@@ -1,4 +1,4 @@
-import { Path  } from '@adactive/adsum-web-map';
+// @flow
 
 class TimeController {
     constructor() {
@@ -10,7 +10,6 @@ class TimeController {
         this.awm = awm;
         return this;
     }
-
 }
 
 const timeController = new TimeController();

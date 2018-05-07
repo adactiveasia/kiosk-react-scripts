@@ -8,51 +8,51 @@ import { mapActions } from '../Map';
 
 import './map.css';
 
-import type { AppState } from "../../rootReducer";
-import type { MapState } from "./initialState";
+import type { AppStateType } from '../../rootReducer';
+import type { MapStateType } from './initialState';
 
-type MappedStateProps = {|
-  mapState: MapState
+type MappedStatePropsType = {|
+    mapState: MapStateType
 |};
-type MappedDispatchProps = {|
-  init: () => void,
-  changeFloor: () => void,
+type MappedDispatchPropsType = {|
+    init: () => void,
+    changeFloor: () => void
 |};
-type OwnProps = {||};
-type Props = MappedStateProps & MappedDispatchProps & OwnProps;
+type OwnPropsType = {||};
+type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 /**
  * Map widget: display map
  * @memberof module:Map
  * @class
  * @extends React.Component
  */
-class Map extends React.Component<Props> {
-  /**
-   * Initialize map
-   */
-  componentDidMount() {
-    this.props.init();
-  }
+class Map extends React.Component<PropsType> {
+    /**
+     * Initialize map
+     */
+    componentDidMount() {
+        this.props.init();
+    }
 
-  render() {
-    return (
-      <div className="map-wrapper">
-        <div id="adsum-web-map-container" />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="map-wrapper">
+                <div id="adsum-web-map-container" />
+            </div>
+        );
+    }
 }
 
-const mapStateToProps = (state: AppState): MappedStateProps => ({
-  mapState: state.map.state
+const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
+    mapState: state.map.state
 });
 
-const mapDispatchToProps = (dispatch): MappedDispatchProps => bindActionCreators({
-  init: () => dispatch(mapActions.init()),
-  changeFloor: () => dispatch(mapActions.changeFloor(1)),
+const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
+    init: (): void => dispatch(mapActions.init()),
+    changeFloor: (): void => dispatch(mapActions.changeFloor(1)),
 }, dispatch);
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Map);

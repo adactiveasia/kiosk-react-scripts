@@ -1,6 +1,8 @@
-import LightsBuilderOptions from "./LightsBuilderOptions";
-import {HemisphereLight, DirectionalLight, AmbientLight, CameraHelper } from "three";
+// @flow
 
+import { HemisphereLight, DirectionalLight, AmbientLight } from 'three';
+
+import LightsBuilderOptions from './LightsBuilderOptions';
 
 class LightsBuilder {
     /**
@@ -23,20 +25,19 @@ class LightsBuilder {
      *
      * @returns {three.Light[]}
      */
-    build(){
+    build() {
         const lights = [];
 
         const hemisphere = new HemisphereLight(0xffffff, 0x888888, 0.2);
         hemisphere.position.set(0, 0, 1);
         lights.push(hemisphere);
 
-        if(this.options.ambientLight !== null){
+        if (this.options.ambientLight !== null) {
             const ambient = new AmbientLight(this.options.ambientLight.color, this.options.ambientLight.intensity);
             lights.push(ambient);
         }
 
-        if(this.options.directionalLight !== null){
-
+        if (this.options.directionalLight !== null) {
             /**
              *
              * @type {DirectionalLight}
@@ -50,15 +51,15 @@ class LightsBuilder {
             dirLight.shadow.mapSize.width = this.options.directionalLight.shadowMapSize;
             dirLight.shadow.mapSize.height = this.options.directionalLight.shadowMapSize;
 
-            dirLight.shadow.camera.left  = - this.options.directionalLight.shadowCameraRadius;
-            dirLight.shadow.camera.right =  this.options.directionalLight.shadowCameraRadius;
-            dirLight.shadow.camera.top =  this.options.directionalLight.shadowCameraRadius;
-            dirLight.shadow.camera.bottom = - this.options.directionalLight.shadowCameraRadius;
+            dirLight.shadow.camera.left = -this.options.directionalLight.shadowCameraRadius;
+            dirLight.shadow.camera.right = this.options.directionalLight.shadowCameraRadius;
+            dirLight.shadow.camera.top = this.options.directionalLight.shadowCameraRadius;
+            dirLight.shadow.camera.bottom = -this.options.directionalLight.shadowCameraRadius;
 
             dirLight.shadow.camera.far = this.options.directionalLight.shadowCameraFar;
-            dirLight.shadow.bias = - this.options.directionalLight.shadowBias;
+            dirLight.shadow.bias = -this.options.directionalLight.shadowBias;
 
-            //lights.push(new CameraHelper( light.shadow.camera ))
+            // lights.push(new CameraHelper( light.shadow.camera ))
 
             lights.push(dirLight);
 
@@ -75,14 +76,14 @@ class LightsBuilder {
             dirLightSide.shadow.mapSize.width = this.options.directionalLight.shadowMapSize;
             dirLightSide.shadow.mapSize.height = this.options.directionalLight.shadowMapSize;
 
-            dirLightSide.shadow.camera.left  = - this.options.directionalLight.shadowCameraRadius;
-            dirLightSide.shadow.camera.right =  this.options.directionalLight.shadowCameraRadius;
-            dirLightSide.shadow.camera.top =  this.options.directionalLight.shadowCameraRadius;
-            dirLightSide.shadow.camera.bottom = - this.options.directionalLight.shadowCameraRadius;
+            dirLightSide.shadow.camera.left = -this.options.directionalLight.shadowCameraRadius;
+            dirLightSide.shadow.camera.right = this.options.directionalLight.shadowCameraRadius;
+            dirLightSide.shadow.camera.top = this.options.directionalLight.shadowCameraRadius;
+            dirLightSide.shadow.camera.bottom = -this.options.directionalLight.shadowCameraRadius;
             dirLightSide.shadow.camera.far = this.options.directionalLight.shadowCameraFar;
-            dirLightSide.shadow.bias = - this.options.directionalLight.shadowBias;
+            dirLightSide.shadow.bias = -this.options.directionalLight.shadowBias;
 
-            //lights.push(new CameraHelper( light2.shadow.camera ))
+            // lights.push(new CameraHelper( light2.shadow.camera ))
 
             lights.push(dirLightSide);
         }

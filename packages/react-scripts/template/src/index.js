@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -7,7 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
 import ACA from './services/ClientAPI';
-//import FirebaseService from './services/FirebaseService';
+// import FirebaseService from './services/FirebaseService';
 
 import App from './App';
 
@@ -15,22 +17,22 @@ import './index.css';
 
 const root = document.getElementById('root');
 const dom = (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <div>
-        <App />
-      </div>
-    </ConnectedRouter>
-  </Provider>
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <div>
+                <App />
+            </div>
+        </ConnectedRouter>
+    </Provider>
 );
 
-// Load the data
-ACA.init()
-  .then(() => ACA.entityManager.loadFromCache(true))
-  .then(() => {
-    ReactDOM.render(dom, root);
+if (root) {
+    // Load the data
+    ACA.init()
+        .then((): void => ACA.entityManager.loadFromCache(true))
+        .then(() => {
+            ReactDOM.render(dom, root);
 
-    registerServiceWorker();
-  });
-
-
+            registerServiceWorker();
+        });
+}

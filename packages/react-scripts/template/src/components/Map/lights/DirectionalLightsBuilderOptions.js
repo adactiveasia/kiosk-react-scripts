@@ -1,11 +1,12 @@
+// @flow
+
 import { AbstractOptions } from '@adactive/adactive-abstract-options';
-import {Color, Vector3} from "three";
+import { Color, Vector3 } from 'three';
 
 /**
  * @extends AbstractOptions
  */
 class DirectionalLightsBuilderOptions extends AbstractOptions {
-
     reset() {
         super.reset();
 

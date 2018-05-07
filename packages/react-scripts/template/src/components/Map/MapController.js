@@ -1,6 +1,8 @@
-import { AdsumWebMap, AdsumLoader, DISPLAY_MODE  } from '@adactive/adsum-web-map';
+// @flow
+
+import { AdsumWebMap, AdsumLoader, DISPLAY_MODE } from '@adactive/adsum-web-map';
 import * as three from 'three';
-import ACA from "../../services/ClientAPI";
+import ACA from '../../services/ClientAPI';
 import deviceConfig from '../../services/Config';
 
 import sceneController from './controllers/SceneController';
@@ -8,12 +10,12 @@ import selectionController from './controllers/SelectionController';
 import wayfindingController from './controllers/WayfindingController';
 import timeController from './controllers/TimeController';
 
-import LightsBuilder from "./lights/LightsBuilder";
-import LightsBuilderOptions from "./lights/LightsBuilderOptions";
+import LightsBuilder from './lights/LightsBuilder';
+import LightsBuilderOptions from './lights/LightsBuilderOptions';
 
-import ObjectsLoader from "./objectsLoader/ObjectsLoader";
+import ObjectsLoader from './objectsLoader/ObjectsLoader';
 
-import customDotPathBuilder from "./controllers/CustomDotPathBuilder";
+import customDotPathBuilder from './controllers/CustomDotPathBuilder';
 
 /**
  * @memberof module:Map
@@ -21,7 +23,6 @@ import customDotPathBuilder from "./controllers/CustomDotPathBuilder";
  * Map controller
  */
 class MapController {
-
     /**
      * Initial settings for map
      */
@@ -38,7 +39,7 @@ class MapController {
             entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
             deviceId: device, // The device Id to use
             shadowEnabled: true,
-            advancedLightingEnabled: ()=> {return true}
+            advancedLightingEnabled: () => true
         });
         // Create the Map instance
         this.awm = new AdsumWebMap({
@@ -48,13 +49,12 @@ class MapController {
                 shadowEnabled: true,
             },
             wayfinding: {
-               /* patternSpace: 1,
+                /* patternSpace: 1,
                  patternSize: 0.5,
-                 createPathPattern: wayfindingController.createPathPattern.bind(wayfindingController)*/
+                 createPathPattern: wayfindingController.createPathPattern.bind(wayfindingController) */
                 pathBuilder: customDotPathBuilder
             }
         });
-
 
 
         window.awm = this.awm;
@@ -63,41 +63,39 @@ class MapController {
 
         // Init the Map
         return this.awm.init().then(() => {
-
             sceneController.init(this.awm);
             selectionController.init(this.awm);
-            wayfindingController.init(this.awm);  // TODO ASYNC
+            wayfindingController.init(this.awm); // TODO ASYNC
             timeController.init(this.awm);
             this.objectsLoader = new ObjectsLoader(this.awm);
 
             console.log('AdsumWebMap is ready to start');
 
-            /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
+            /* ------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
 
             const backgroundTextureLoader = new three.TextureLoader();
             backgroundTextureLoader.crossOrigin = '';
             const backgroundTexture = backgroundTextureLoader.load('assets/textures/background.png');
             backgroundTexture.wrapS = three.RepeatWrapping;
             backgroundTexture.wrapT = three.RepeatWrapping;
-            backgroundTexture.repeat.set(1,1);
+            backgroundTexture.repeat.set(1, 1);
             this.awm.sceneManager.scene.background = backgroundTexture;
 
             const lightsToRemove = [];
-            for(const child of this.awm.sceneManager.scene.children){
-                if(child.isLight){
+            for (const child of this.awm.sceneManager.scene.children) {
+                if (child.isLight) {
                     lightsToRemove.push(child);
                 }
             }
 
-            for(const lightToRemove of lightsToRemove) {
+            for (const lightToRemove of lightsToRemove) {
                 this.awm.sceneManager.scene.remove(lightToRemove);
             }
 
             const lightsBuilderOptions = new LightsBuilderOptions();
-
             const lightBuilder = new LightsBuilder(lightsBuilderOptions);
 
-            for(const light of lightBuilder.build()){
+            for (const light of lightBuilder.build()) {
                 this.awm.sceneManager.scene.add(light);
                 light.updateMatrixWorld();
             }
@@ -108,7 +106,7 @@ class MapController {
 
             texture.wrapS = three.RepeatWrapping;
             texture.wrapT = three.RepeatWrapping;
-            texture.repeat.set(20,20);
+            texture.repeat.set(20, 20);
 
             this.awm.objectManager.site._mesh.material = new three.MeshPhongMaterial({
                 color: 0xe7b66d,
@@ -118,34 +116,30 @@ class MapController {
                 side: three.DoubleSide
             });
 
-            this.objectsLoader.createJSON3DObj('assets/3dModels/painted.json').then(
-                (basketball) => {
-                    const basketballClone = this.objectsLoader.add3DObjectOnFloor(null, new three.Vector3(-200,500,8), basketball.clone());
-                    basketballClone.scale.set(35, 35, 35);
-                    //window.foo = basketballClone;
+            this.objectsLoader.createJSON3DObj('assets/3dModels/painted.json').then((basketball) => {
+                const basketballClone = this.objectsLoader.add3DObjectOnFloor(null, new three.Vector3(-200, 500, 8), basketball.clone());
+                basketballClone.scale.set(35, 35, 35);
+                // window.foo = basketballClone;
 
-                    for(const child of basketballClone.children) {
-                        if(!child.isLight) {
-                            child.castShadow = true;
-                        }
+                for (const child of basketballClone.children) {
+                    if (!child.isLight) {
+                        child.castShadow = true;
                     }
-
-                    basketballClone.updateMatrixWorld();
                 }
-            );
+
+                basketballClone.updateMatrixWorld();
+            });
 
             this.buildingOpacity();
 
-            this.awm.objectManager.spaces.forEach(
-                (space)=>{
-                    if(space.isSpace) {
-                        this._wireFrameAShape(space, 0, 0x5a5b5a);
-                        space._mesh.material.specular = new three.Color(0x53adc6);
-                        space._mesh.material.shininess = 5;
-                    }
+            this.awm.objectManager.spaces.forEach((space) => {
+                if (space.isSpace) {
+                    this._wireFrameAShape(space, 0, 0x5a5b5a);
+                    space._mesh.material.specular = new three.Color(0x53adc6);
+                    space._mesh.material.shininess = 5;
                 }
-            );
-            /*------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
+            });
+            /* ------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
 
             // Start the rendering
             return this.awm.start();
@@ -181,49 +175,41 @@ class MapController {
 
                 return sceneController.setCurrentFloorCustom(this.awm.defaultFloor, animated); // TODO Customize for decathlon
             })
-            .then(() => {
-                return this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, animated);
-            })
+            .then(() => this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, animated))
             .then(() => {}); // Ensure void result
     }
 
     buildingOpacity() {
-        this.awm.objectManager.buildings.forEach(
-            (building)=>{
-                building.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
-                building.floors.forEach(
-                    (f)=>{
-                        f.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
-                        for(const child of f._mesh.children){
-                            if(child.name === "ExtrudeMesh") {
-                                child.visible = false;
-                            }
-                        }
+        this.awm.objectManager.buildings.forEach((building) => {
+            building.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
+            building.floors.forEach((f) => {
+                f.setDisplayMode(DISPLAY_MODE.TRANSPARENT);
+                for (const child of f._mesh.children) {
+                    if (child.name === 'ExtrudeMesh') {
+                        child.visible = false;
                     }
-                )
-
-            }
-        )
+                }
+            });
+        });
     }
 
-    _wireFrameAShape(space, opacity = 0.7, matColor = null, needBoundingBox = false) {
-
-        const geo = new three.EdgesGeometry( space._mesh.geometry ); // or WireframeGeometry
-        const mat = new three.LineBasicMaterial( { color: matColor, linewidth: 1 } );
-        const wireFrame = new three.LineSegments( geo, mat );
-        space._mesh.add( wireFrame );
+    _wireFrameAShape(space, opacity: number = 0.7, matColor = null, needBoundingBox: boolean = false) {
+        const geo = new three.EdgesGeometry(space._mesh.geometry); // or WireframeGeometry
+        const mat = new three.LineBasicMaterial({ color: matColor, linewidth: 1 });
+        const wireFrame = new three.LineSegments(geo, mat);
+        space._mesh.add(wireFrame);
     }
 
-    /*------------------------------------ FUNCTIONS: MAP CONTROL  --------------------------------------------*/
+    /* ------------------------------------ FUNCTIONS: MAP CONTROL  --------------------------------------------*/
 
     /**
      * View switch between 2D and 3D
      * @param mode {string} mode view
      */
     switchMode(mode) {
-        /*if (mode === "3D") {
+        /* if (mode === "3D") {
             return this.awm.cameraManager.switchTo3D();
-        } else if (mode === "2D") return this.awm.cameraManager.switchTo2D();*/
+        } else if (mode === "2D") return this.awm.cameraManager.switchTo2D(); */
     }
 }
 const mapController = new MapController();

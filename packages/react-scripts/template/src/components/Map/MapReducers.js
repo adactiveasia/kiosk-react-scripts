@@ -1,21 +1,21 @@
 // @flow
 
 import { types as mapActionsType } from './MapActions';
-import { initialState } from "./initialState";
+import { initialState } from './initialState';
 
-import type { MapReducerState } from './initialState';
-import type { MapAction } from "./MapActions";
+import type { MapReducerStateType } from './initialState';
+import type { MapActionType } from './MapActions';
 
-export type MapReducers = (state: MapReducerState, action: MapAction) => MapReducerState;
+export type MapReducersType = (state: MapReducerStateType, action: MapActionType) => MapReducerStateType;
 
-const mapReducers: MapReducers = (state: MapReducerState = initialState, action: MapAction): MapReducerState => {
+const mapReducers: MapReducersType = (state: MapReducerStateType = initialState, action: MapActionType): MapReducerStateType => {
     switch (action.type) {
     case mapActionsType.DID_INIT: {
-        const { floors, buildings, currentFloor } = action;
+        const { floors, buildings, currentFloor } : { floors: any, buildings: any, currentFloor: number } = action;
 
         return {
             ...state,
-            state: "idle",
+            state: 'idle',
             floors,
             buildings,
             currentFloor,
@@ -24,14 +24,14 @@ const mapReducers: MapReducers = (state: MapReducerState = initialState, action:
     case mapActionsType.FLOOR_WILL_CHANGE:
         return {
             ...state,
-            state: "transition",
+            state: 'transition',
         };
     case mapActionsType.FLOOR_DID_CHANGE: {
         const { currentFloor, previousFloor } = action;
 
         return {
             ...state,
-            state: "idle",
+            state: 'idle',
             currentFloor,
             previousFloor,
         };
@@ -51,7 +51,7 @@ const mapReducers: MapReducers = (state: MapReducerState = initialState, action:
         };
     case mapActionsType.WILL_INIT:
     default:
-        return state
+        return state;
     }
 };
 

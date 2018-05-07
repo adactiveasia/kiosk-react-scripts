@@ -1,9 +1,11 @@
-import * as three from 'three';
-import OBJLoader from "./OBJLoader";
+// @flow
 
-/*window.THREE = three;
+import * as three from 'three';
+import OBJLoader from './OBJLoader';
+
+/* window.THREE = three;
  var OBJLoader = require('three-obj-loader');
- OBJLoader(window.THREE);*/
+ OBJLoader(window.THREE); */
 
 /**
  * Usage
@@ -22,7 +24,6 @@ import OBJLoader from "./OBJLoader";
  * ObjectsLoader
  */
 class ObjectsLoader {
-
     constructor(awm) {
         this.awm = awm;
     }
@@ -50,18 +51,17 @@ class ObjectsLoader {
      * @param url
      * @return {Promise}
      */
-     createOBJ3DObj(url) {
-         return new Promise(
-             (resolve, reject) => {
-                const loader = new OBJLoader();
-                 loader.load(
-                 url,
-                 resolve,
-                 () => {},
-                 reject,
-             );
-         });
-     }
+    createOBJ3DObj(url) {
+        return new Promise((resolve, reject) => {
+            const loader = new OBJLoader();
+            loader.load(
+                url,
+                resolve,
+                () => {},
+                reject,
+            );
+        });
+    }
 
     /**
      *

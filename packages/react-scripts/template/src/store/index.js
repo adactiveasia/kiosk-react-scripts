@@ -20,23 +20,23 @@ const middleware: Array<Middleware> = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
-  const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
+    const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
 
-  if (typeof devToolsExtension === 'function') {
-    enhancers.push(devToolsExtension())
-  }
+    if (typeof devToolsExtension === 'function') {
+        enhancers.push(devToolsExtension());
+    }
 }
 
 const createStoreWithMiddleware = compose(
-  applyMiddleware(...middleware),
-  ...enhancers
+    applyMiddleware(...middleware),
+    ...enhancers
 )(createStore);
 
 
 function configureStore(preloadState = initialState) {
     const store = createStoreWithMiddleware(rootReducer, preloadState);
     store.runSaga = sagaMiddleware.run(rootSaga);
-    return store
+    return store;
 }
 
 const store = configureStore();

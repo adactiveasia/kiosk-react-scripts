@@ -1,3 +1,5 @@
+// @flow
+
 import history from './history';
 import routerMiddleware from './routerMiddleware';
 

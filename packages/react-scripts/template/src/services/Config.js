@@ -1,14 +1,14 @@
+// @flow
 
 class Config {
     constructor() {
         this.config = null;
     }
 
-    async init () {
+    async init() {
         const response = await fetch('http://localhost:9001/deviceConfig');
         this.config = await response.json();
     }
-
 }
 
 const config = new Config();

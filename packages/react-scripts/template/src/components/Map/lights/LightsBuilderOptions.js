@@ -1,6 +1,9 @@
+// @flow
+
 import { AbstractOptions } from '@adactive/adactive-abstract-options';
-import AmbientLightsBuilderOptions from "./AmbientLightsBuilderOptions";
-import DirectionalLightsBuilderOptions from "./DirectionalLightsBuilderOptions";
+
+import AmbientLightsBuilderOptions from './AmbientLightsBuilderOptions';
+import DirectionalLightsBuilderOptions from './DirectionalLightsBuilderOptions';
 
 /**
  * @extends AbstractOptions

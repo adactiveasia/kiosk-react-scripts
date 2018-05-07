@@ -1,3 +1,5 @@
+// @flow
+
 import { Tween, Easing } from 'es6-tween';
 
 class PathSectionDrawer {
@@ -34,7 +36,6 @@ class PathSectionDrawer {
          */
         this.center = false; // TODO
         this.tweens = [];
-
     }
 
     /**
@@ -80,7 +81,7 @@ class PathSectionDrawer {
      * @return {Promise<boolean, Error>}
      */
     _showPattern(index, delay) {
-        /*------------------------------------ INIT --------------------------------------------*/
+        /* ------------------------------------ INIT --------------------------------------------*/
         const pattern = this.pathSectionObject._mesh.children[index];
 
         const opacityHandler = {
@@ -99,14 +100,14 @@ class PathSectionDrawer {
         pattern.position.setZ(positionHandler.z);
 
         const promiseOpacity = new Promise((resolve, reject) => {
-            /*------------------------------------ OPACITY ANIMATION  --------------------------------------------*/
+            /* ------------------------------------ OPACITY ANIMATION  --------------------------------------------*/
             const tweenOpacity = new Tween(opacityHandler)
                 .to({
                     opacity: 1,
                 }, 500)
                 .delay((index + 1) * delay)
                 .easing(Easing.Exponential.In)
-                .on('update',() => {
+                .on('update', () => {
                     pattern.traverse((obj) => {
                         if (obj.material) {
                             obj.material.opacity = opacityHandler.opacity;
@@ -124,14 +125,14 @@ class PathSectionDrawer {
             this.tweens.push(tweenOpacity);
         });
         const promisePosition = new Promise((resolve, reject) => {
-            /*------------------------------------ POSITION ANIMATION  --------------------------------------------*/
+            /* ------------------------------------ POSITION ANIMATION  --------------------------------------------*/
             const tweenPosition = new Tween(positionHandler)
                 .to({
                     z: 1,
                 }, 1000)
                 .delay((index + 1) * delay)
                 .easing(Easing.Bounce.Out)
-                .on('update',() => {
+                .on('update', () => {
                     pattern.position.setZ(positionHandler.z);
                     pattern.updateMatrixWorld();
                 })
@@ -144,9 +145,8 @@ class PathSectionDrawer {
                 .start();
 
             this.tweens.push(tweenPosition);
-
         });
-        return Promise.all([promiseOpacity,promisePosition]);
+        return Promise.all([promiseOpacity, promisePosition]);
     }
 }
 
