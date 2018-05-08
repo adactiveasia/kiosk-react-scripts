@@ -3,10 +3,6 @@
 import * as three from 'three';
 import OBJLoader from './OBJLoader';
 
-/* window.THREE = three;
- var OBJLoader = require('three-obj-loader');
- OBJLoader(window.THREE); */
-
 /**
  * Usage
  *

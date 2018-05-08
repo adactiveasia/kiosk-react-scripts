@@ -17,7 +17,6 @@ type PropsType = {
 const Home = (props: PropsType): Node => (
     <div>
         <h1>Home</h1>
-        <p>Welcome home!</p>
         <button onClick={props.changePage}>Go to about page via redux</button>
         <Map />
     </div>

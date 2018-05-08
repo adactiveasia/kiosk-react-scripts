@@ -1,7 +1,7 @@
 // @flow
 
 import wayfindingController from './WayfindingController';
-import mapController from '../MapController';
+import mapController from './MapController';
 
 class SelectionController {
     constructor() {

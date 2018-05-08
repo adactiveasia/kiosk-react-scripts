@@ -17,9 +17,6 @@ class App extends React.Component<PropsType> {
         return (
             <div className="App">
                 <Header logo={logo} />
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
                 <nav>
                     <Link to="/">Home</Link>
                     <Link to="/about-us">About</Link>

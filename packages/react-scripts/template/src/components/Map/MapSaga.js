@@ -5,7 +5,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import { SCENE_EVENTS, MOUSE_EVENTS } from '@adactive/adsum-web-map';
 
 import { types as mapActionTypes, floorDidChanged, onClick } from './MapActions';
-import mapController from './MapController';
+import mapController from './controllers/MapController';
 import sceneController from './controllers/SceneController';
 import selectionController from './controllers/SelectionController';
 

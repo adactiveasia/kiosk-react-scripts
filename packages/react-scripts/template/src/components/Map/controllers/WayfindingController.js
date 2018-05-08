@@ -1,11 +1,12 @@
 // @flow
 
 import { Path } from '@adactive/adsum-web-map';
-import PathSectionDrawer from './PathSectionDrawer';
 import sceneController from './SceneController';
 
-import CustomUserObject from './CustomUserObject';
-import customDotPathBuilder from './CustomDotPathBuilder';
+import CustomUserObject from '../kioskIndicator/CustomUserObject';
+
+import PathSectionDrawer from '../path/PathSectionDrawer';
+import customDotPathBuilder from '../path/CustomDotPathBuilder';
 
 class WayfindingController {
     constructor() {
@@ -14,11 +15,13 @@ class WayfindingController {
         this.locked = false;
     }
 
-    init(awm) { // TODO ASYNC
+    init(awm) {
         this.awm = awm;
-        customDotPathBuilder.initer(awm); // TODO
-        this.loadUserObject(); // TODO ASYNC
-        return this;
+        return customDotPathBuilder.initer(awm).then(
+            ()=>{
+                return this.loadUserObject();
+            }
+        )
     }
 
     loadUserObject() {

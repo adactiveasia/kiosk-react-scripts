@@ -49,7 +49,6 @@ const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
     init: (): void => dispatch(mapActions.init()),
-    changeFloor: (): void => dispatch(mapActions.changeFloor(1)),
 }, dispatch);
 
 export default connect(
