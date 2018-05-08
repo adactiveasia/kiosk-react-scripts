@@ -22,3 +22,7 @@ yarn-error.log*
 
 # temporary directory for the purpose of initialization
 /init
+
+
+public/local/
+package/
