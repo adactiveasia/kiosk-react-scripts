@@ -105,7 +105,7 @@ class PathSectionDrawer {
                 .to({
                     opacity: 1,
                 }, 500)
-                .delay((index + 1) * delay)
+                .delay(delay)
                 .easing(Easing.Exponential.In)
                 .on('update', () => {
                     pattern.traverse((obj) => {
@@ -130,7 +130,7 @@ class PathSectionDrawer {
                 .to({
                     z: 1,
                 }, 1000)
-                .delay((index + 1) * delay)
+                .delay(delay)
                 .easing(Easing.Bounce.Out)
                 .on('update', () => {
                     pattern.position.setZ(positionHandler.z);

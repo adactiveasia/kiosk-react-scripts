@@ -1,6 +1,8 @@
 // @flow
 
 import { Path } from '@adactive/adsum-web-map';
+
+import deviceConfig from '../../../services/Config';
 import sceneController from './SceneController';
 
 import CustomUserObject from '../kioskIndicator/CustomUserObject';
@@ -32,8 +34,9 @@ class WayfindingController {
             { placeId: Symbol('UserPlace') },
             Symbol('UserPositionId'),
         ).then((customUserObject) => {
+            const { device } = deviceConfig.config;
             this.awm.objectManager.user = customUserObject;
-            return this.awm.setDeviceId(1062, false); // TODO
+            return this.awm.setDeviceId(device, false);
         });
     }
 
@@ -60,13 +63,11 @@ class WayfindingController {
                 for (const pathSection of this.current.pathSections) {
                     // Do the floor change
                     const floor = pathSection.ground.isFloor ? pathSection.ground : null;
-                    // promise = promise.then(() => this.awm.sceneManager.setCurrentFloor(floor));
-                    promise = promise.then(() => sceneController.setCurrentFloor(floor === null ? null : floor.id)); // TODO Customize for decathlon
+                    promise = promise.then(() => sceneController.setCurrentFloor(floor === null ? null : floor.id));
                     promise = promise.then(() => this.awm.cameraManager.centerOnFloor(floor));
 
                     // Draw the step
                     promise = promise.then(() => this.drawPathSection(pathSection));
-                    // promise = promise.then(() => this.awm.wayfindingManager.drawPathSection(pathSection));
 
                     // Add a delay of 1.5 seconds
                     promise = promise.then(() => new Promise((resolve) => {

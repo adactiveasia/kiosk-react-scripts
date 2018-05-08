@@ -71,16 +71,14 @@ class SelectionController {
         } else if (this.current !== null && this.current.isSpace) {
             this.locked = true;
             this.highlightSpace(this.current)
-                .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
-                .then(() => wayfindingController.goTo(this.current)) // TODO
+                .then(() => wayfindingController.goTo(this.current))
                 .then(() => {
                     this.locked = false;
                 });
         } else if (this.current !== null && this.current.isLabel) {
             this.locked = true;
             this.highlightLabel(this.current)
-                .then(() => mapController.setDeviceIdCustom(1082)) // TODO Customize for decathlon
-                .then(() => wayfindingController.goTo(this.current)) // TODO
+                .then(() => wayfindingController.goTo(this.current))
                 .then(() => {
                     this.locked = false;
                 });

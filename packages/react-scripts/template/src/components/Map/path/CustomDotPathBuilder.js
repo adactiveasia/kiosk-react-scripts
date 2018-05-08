@@ -52,7 +52,7 @@ class CustomDotPathBuilder {
         this.objectsLoader = new ObjectsLoader(this.awm);
         this.options = {
             patternSpace: 1,
-            patternSize: 0.5,
+            patternSize: 1,
         };
         return this.loadPathPattern();
     }
@@ -67,7 +67,7 @@ class CustomDotPathBuilder {
                         group.add(pathPattern.children[0]);
                         pathPattern = group;
                     }
-                    pathPattern.scale.multiplyScalar(10); // TODO
+                    pathPattern.scale.multiplyScalar(this.projector.meterToAdsumDistance(this.options.patternSize)); // TODO
                     pathPattern.traverse((obj) => {
                         if (obj.name === 'outline') {
                             obj.position.set(0.05, 0.68, -0.33);
@@ -100,7 +100,7 @@ class CustomDotPathBuilder {
 
         const pathSectionMesh = new Group();
 
-        const points = mergePathSections.interpolate(this.options.patternSpace, this.projector);
+        const points = mergePathSections.interpolate(this.projector.meterToAdsumDistance(this.options.patternSpace), this.projector);
         for (let i = 0; i < points.length - 1; i++) {
             const point = points[i].position;
             const nextPoint = points[i + 1].position;
@@ -152,10 +152,10 @@ class CustomDotPathBuilder {
             pattern.up.set(0, 0, 1);
             if (i < patterns.length - 1) {
                 const nextPattern = patterns[i + 1];
-                pattern.lookAt(new Vector3(nextPattern.position.x, nextPattern.position.y, nextPattern.position.z));
+                pattern.lookAt(new Vector3(nextPattern.position.x, nextPattern.position.y, 0));
             } else if (this.mergePathSectionObject.pathSection.to) {
                 const nextPosition = this.projector.utmToAdsum(this.mergePathSectionObject.pathSection.to.pathNode.utmPosition);
-                pattern.lookAt(new Vector3(nextPosition.x, nextPosition.y, nextPosition.z));
+                pattern.lookAt(new Vector3(nextPosition.x, nextPosition.y, 0 ));
             }
         }
 
