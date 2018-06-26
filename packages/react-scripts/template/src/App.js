@@ -1,7 +1,9 @@
 // @flow
 
 import * as React from 'react';
-import { Route, Link } from 'react-router-dom';
+import type { Element, } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { Header } from './components/Header';
 
