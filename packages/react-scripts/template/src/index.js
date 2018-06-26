@@ -8,8 +8,10 @@ import { ConnectedRouter } from 'react-router-redux';
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
-import ACA from './services/ClientAPI';
-// import FirebaseService from './services/FirebaseService';
+import deviceConfig from './services/Config';
+import ACA from '@adactive/adsum-utils/services/ClientAPI';
+
+import appService from './services/AppService';
 
 import App from './App';
 
@@ -28,8 +30,10 @@ const dom = (
 
 if (root) {
     // Load the data
-    ACA.init()
-        .then((): void => ACA.entityManager.loadFromCache(true))
+    deviceConfig.init()
+        .then((): void => ACA.init(deviceConfig.config, deviceConfig.fallbackOnlineApi))
+        .then((): void => ACA.entityManager.load())
+        .then((): void => appService.preloadAppImages())
         .then(() => {
             ReactDOM.render(dom, root);
 

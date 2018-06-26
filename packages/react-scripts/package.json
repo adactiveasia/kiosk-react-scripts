@@ -1,6 +1,6 @@
 {
   "name": "@adactive/kiosk-react-scripts",
-  "version": "1.1.57",
+  "version": "1.1.58",
   "description": "Configuration and scripts for Kiosk React App.",
   "repository": "AdactiveSAS/create-react-app",
   "license": "MIT",
@@ -92,8 +92,7 @@
     "whatwg-fetch": "2.0.3",
     "react-app-rewired": "^1.5.2",
     "redux-thunk": "^2.2.0",
-    "dat.gui": "^0.7.1",
-    "@adactive/adsum-utils": "^0.0.1-y.34"
+    "dat.gui": "^0.7.1"
   },
   "devDependencies": {
     "react": "^16.0.0",

@@ -15,6 +15,19 @@ class FirebaseService {
             const errorMessage = error.message;
             // ...
         });
+
+        window.firebaseService = this;
+    }
+
+    getData(key) {
+        return firebase.database().ref(key).once('value').then((snapshot)=>snapshot.val());
+    }
+
+    addListenerOnChanged(key, callback) {
+        const ref = firebase.database().ref(key);
+        ref.on('child_changed', (data) => {
+            callback(data.val());
+        });
     }
 }
 

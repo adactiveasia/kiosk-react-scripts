@@ -2,13 +2,20 @@
 
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import map from './components/Map/MapReducers';
-import type { MapReducers } from './components/Map/MapReducers';
+import map from '@adactive/arc-map/src/MapReducers';
+import type { MapReducersType } from '@adactive/arc-map/src/MapReducers';
 
+export type RoutingReducerType = {|
+    location: {|
+    pathname: string,
+        search: string,
+        hash: string
+    |}
+|};
 
-export type AppState = {|
-  routing: Object,
-  map: MapReducers
+export type AppStateType = {|
+    routing: RoutingReducerType,
+    map: MapReducersType
 |};
 
 const appState: AppState = {

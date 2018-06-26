@@ -9,6 +9,8 @@ import http from "http";
 import fs from "fs";
 import cors from "cors";
 
+import imageUrlsFetcher from './ImageUrlsFetcher';
+
 import { LocalCacheManager } from '@adactive/adsum-client-api';
 
 /**
@@ -155,7 +157,7 @@ class Server {
 
         const route = this.options.route;
 
-        app.use(`${route}`, serveStatic(this.options.path, ['index.html']));
+        app.use(`${route}`, serveStatic(this.options.path, { maxAge: '1d' }));
 
         app.use(`${route}/deviceConfig`,  (req, res, next) =>{
             res.end(JSON.stringify(this.options.config));
@@ -179,6 +181,25 @@ class Server {
             console.log("Get local file : " + query.path);
             res.end(data);
 
+            next();
+        });
+
+        app.use(`${route}/getAllAppImageUrls`,  (req, res, next) =>{
+            const {site, device} = this.options.config;
+            const arrOfEntryPointsRelativeToPublicDir = [
+                'assets/images',
+                'local/bin'
+            ];
+
+            let urls = [];
+            try {
+                urls = imageUrlsFetcher.getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir);
+            } catch(e) {
+                console.error('An error occured in getAllAppImageUrls');
+                console.log(e);
+            }
+
+            res.end(JSON.stringify({urls}));
             next();
         });
 

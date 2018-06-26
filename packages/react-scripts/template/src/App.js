@@ -4,30 +4,87 @@ import * as React from 'react';
 import { Route, Link } from 'react-router-dom';
 
 import { Header } from './components/Header';
-import { Home } from './routeComponents/Home';
-import { About } from './routeComponents/About';
+
+import { Map, mapActions } from '@adactive/arc-map';
+import deviceConfig from './services/Config';
+import store from './store/index';
 
 import logo from './logo.svg';
 import './App.css';
 
-type PropsType = {||};
+type MappedStatePropsType = {|
+    pathName: string
+|};
 
-class App extends React.Component<PropsType> {
-    render() {
+type MappedDispatchPropsType = {||};
+type OwnPropsType = {||};
+type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
+
+
+type StateType = {||};
+
+class App extends React.Component<PropsType, StateType> {
+    constructor(props: PropsType) {
+        super(props);
+
+    }
+
+    state = {
+    };
+
+    orientation = (window.innerHeight > window.innerWidth) ? 'portrait' : 'landscape';
+
+    componentWillMount() {
+
+    }
+
+    componentDidMount() {
+
+    }
+
+    onMapClicked(object) {
+        if (object && object.placeId) {
+            //DO STUFF
+        }
+    }
+
+    render(): Element<'div'> {
+        const {
+            pathName
+        } = this.props;
+
         return (
             <div className="App">
                 <Header logo={logo} />
-                <nav>
-                    <Link to="/">Home</Link>
-                    <Link to="/about-us">About</Link>
-                </nav>
                 <main>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/about-us" component={About} />
+                    <Map
+                        exact
+                        path="/"
+                        store={store}
+                        device={deviceConfig.config.device}
+                        isOpen={
+                            (pathName === '/')
+                        }
+                        onClick={object => this.onMapClicked(object)}
+                        display="3D"
+                        backgroundImage="assets/textures/background.png"
+                    >
+                        {/*Children*/}
+                    </Map>
                 </main>
             </div>
         );
     }
 }
 
-export default App;
+const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
+    pathName: state.routing.location.pathname,
+});
+
+const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);

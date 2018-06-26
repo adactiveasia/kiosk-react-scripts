@@ -17,8 +17,15 @@ module.exports = {
     "startServer": "node ./public/startServer --port 9001 --jsonConfigFile ./public/config.json --data_folder ./public/local"
   },
   dependenciesToAdd: {
-    "@adactive/adsum-client-api": "^2.0.0",
-    "@adactive/adsum-web-map": "^5.0.1-rc.9",
+    "@adactive/adsum-client-api": "^2.2.0-rc.1",
+    "@adactive/adsum-web-map": "5.3.0-alpha.buffer.1",
+    "@adactive/adsum-utils": "0.0.2-y.44.16",
+    "babel-loader": "7.1.2",
+    "fs-extra": "6.0.1",
+    "lodash": "^4.17.10",
+    "react-responsive": "^4.1.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "flow-bin": "^0.72.0"
   },
   dependenciesToRemove: ['npm', 'prompt', 'chalk'],
   fileLocations: {

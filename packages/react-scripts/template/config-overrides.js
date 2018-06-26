@@ -5,6 +5,7 @@ module.exports = function override(config, env) {
 
     let babelLoader = getBabelLoader(config.module.rules);
     delete babelLoader.include;
+    babelLoader.exclude = /^((?!adactive).)*$/;
 
     return config;
 };

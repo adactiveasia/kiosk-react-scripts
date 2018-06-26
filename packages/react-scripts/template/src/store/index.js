@@ -14,9 +14,9 @@ const sagaMiddleware = createSagaMiddleware();
 const initialState = {};
 const enhancers = [];
 const middleware: Array<Middleware> = [
-    sagaMiddleware,
     thunk,
-    routerMiddleware
+    routerMiddleware,
+    sagaMiddleware
 ];
 
 if (process.env.NODE_ENV === 'development') {
