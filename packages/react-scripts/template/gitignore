@@ -26,3 +26,6 @@ yarn-error.log*
 
 public/local/
 package/
+
+.idea/
+.idea/workspace.xml
