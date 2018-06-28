@@ -19,7 +19,7 @@ module.exports = {
   dependenciesToAdd: {
     "@adactive/adsum-client-api": "^2.2.0-rc.1",
     "@adactive/adsum-web-map": "5.3.0-alpha.buffer.1",
-    "@adactive/arc-map": "0.0.2-y.44.23",
+    "@adactive/arc-map": "0.0.2-y.44.24",
     "@adactive/adsum-utils": "0.0.2-y.44.16",
     "babel-loader": "7.1.2",
     "fs-extra": "6.0.1",
