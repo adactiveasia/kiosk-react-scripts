@@ -193,7 +193,7 @@ class Server {
 
             let urls = [];
             try {
-                urls = imageUrlsFetcher.getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir);
+                urls = imageUrlsFetcher.getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, this.options.path);
             } catch(e) {
                 console.error('An error occured in getAllAppImageUrls');
                 console.log(e);

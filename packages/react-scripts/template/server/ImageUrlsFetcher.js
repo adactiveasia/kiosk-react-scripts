@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const contentBase = "./public";
-
 module.exports = {
-    getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir) {
+    getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, contentBase) {
         const resultingArr = [];
         const startingString = 'localhost:9001';
 
