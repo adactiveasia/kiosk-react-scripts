@@ -66,8 +66,8 @@ class Server {
             this.createServer().then(() => {
                 console.log("Server successfully started");
                 resolve({
-                    //url: `http://${this.options.hostname}:${this.options.port}/index.html`,
-                    //app: this.app
+                    url: `http://${this.options.hostname}:${this.options.port}/`,
+                    app: this.app
                 });
             }, (e) => {
                 console.log("Server failed to start !");
