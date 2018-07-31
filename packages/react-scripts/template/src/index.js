@@ -5,11 +5,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
+import ACA from '@adactive/adsum-utils/services/ClientAPI';
+
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import { history } from './router';
 import deviceConfig from './services/Config';
-import ACA from '@adactive/adsum-utils/services/ClientAPI';
 
 import appService from './services/AppService';
 

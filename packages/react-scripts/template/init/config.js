@@ -32,6 +32,7 @@ module.exports = {
   fileLocations: {
     packageJsonLocation: path.resolve(__dirname, '../package.json'),
     firebaseConfigLocation: path.resolve(__dirname, '../src/services/firebaseConfig.json'),
+    firebaseServiceLocation: path.resolve(__dirname, '../src/services/FirebaseService.js'),
     adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json')
   }
 };

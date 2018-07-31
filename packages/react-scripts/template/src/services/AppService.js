@@ -21,11 +21,9 @@ class AppService {
                 });
                 console.log('All images have been preloaded.');
             })
-            .catch(
-                (e)=> {
-                    console.log(e);
-                }
-            );
+            .catch((e) => {
+                console.log(e);
+            });
     }
 }
 

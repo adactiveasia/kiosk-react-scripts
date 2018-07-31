@@ -20,7 +20,7 @@ module.exports = {
           if (fs.lstatSync(curPath).isDirectory()) {
             recursive(curPath);
           } else { // delete file
-            fs.unlinkSync(curPath);
+            deleteFile(curPath);
           }
         });
 
@@ -30,4 +30,8 @@ module.exports = {
 
     recursive(pathToFolder);
   },
+
+  deleteFile(path) {
+    fs.unlinkSync(path);
+  }
 };

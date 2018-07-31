@@ -28,7 +28,6 @@ type StateType = {||};
 class App extends React.Component<PropsType, StateType> {
     constructor(props: PropsType) {
         super(props);
-
     }
 
     state = {
@@ -46,7 +45,7 @@ class App extends React.Component<PropsType, StateType> {
 
     onMapClicked(object) {
         if (object && object.placeId) {
-            //DO STUFF
+            // DO STUFF
         }
     }
 
@@ -71,7 +70,7 @@ class App extends React.Component<PropsType, StateType> {
                         display="3D"
                         backgroundImage="assets/textures/background.png"
                     >
-                        {/*Children*/}
+                        {/* Children */}
                     </Map>
                 </main>
             </div>

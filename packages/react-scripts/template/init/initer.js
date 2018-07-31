@@ -19,7 +19,8 @@ const {
 const {
   addTokenToNpmrc,
   writeJsonFile,
-  deleteFolderRecursive
+  deleteFolderRecursive,
+  deleteFile,
 } = require('./fileUtils');
 
 const packageJson = require('../package.json');
@@ -33,9 +34,11 @@ Promise.resolve()
   .then(isFirebaseRequired => askFirebaseCredentials(isFirebaseRequired))
   .then(
     (firebaseConfig) => {
-        if(firebaseConfig) {
-            writeJsonFile(fileLocations.firebaseConfigLocation,firebaseConfig)
-        }
+      if(firebaseConfig) {
+        writeJsonFile(fileLocations.firebaseConfigLocation,firebaseConfig)
+      } else {
+        deleteFile(fileLocations.firebaseServiceLocation)
+      }
     }
   )
   .then(installPackages)

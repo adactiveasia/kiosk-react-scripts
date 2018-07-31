@@ -1,6 +1,6 @@
-import Server from "./Server";
-import Version from "./Version";
-import Options from "./Options";
+import Server from './Server';
+import Version from './Version';
+import Options from './Options';
 
 /**
  * @exports APB
@@ -19,5 +19,5 @@ export {
     /**
      * {@link Version}
      */
-    Version
+    Version,
 };
