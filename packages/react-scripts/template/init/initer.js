@@ -1,6 +1,7 @@
 const {
   scriptsToAdd,
   dependenciesToAdd,
+  devDependenciesToAdd,
   dependenciesToRemove,
   fileLocations
 } = require('./config');
@@ -26,6 +27,7 @@ const {
 const packageJson = require('../package.json');
 packageJson.scripts = { ...packageJson.scripts, ...scriptsToAdd };
 packageJson.dependencies = { ...packageJson.dependencies, ...dependenciesToAdd };
+packageJson.devDependencies = { ...packageJson.devDependencies, ...devDependenciesToAdd };
 
 Promise.resolve()
   .then(askForToken)

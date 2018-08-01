@@ -21,14 +21,10 @@ class Server {
     /**
      * Create a new server
      *
-     * Note: the provided option will be frozen to prevent modifications
-     *
-     * @param {ServerOptions} options
+     * @param {Options|object} options
      */
     constructor(options) {
-        check.assert.instance(options, Options, 'options are required');
-
-        this.options = options;
+        this.options = new Options(options);
 
         this.app = null;
         this.server = null;
@@ -41,27 +37,6 @@ class Server {
     }
 
     start() {
-        const time = Date.now();
-
-        return this.cacheManager.update(
-            this.options.config.site, // Site Id
-            this.options.cache, // Cache options
-        ).then((updated) => {
-            console.log(`Sync success in ${parseInt((Date.now() - time) / 1000, 10)} seconds`);
-
-            if (updated) {
-                console.log('Cache up-to-date');
-            } else {
-                console.log('Cache is present but might be outdated (no Internet connexion)');
-            }
-
-            return this.onSynchroDone();
-        }).catch((error) => {
-            console.error('Unable to update the cache, and no cache available', error);
-        });
-    }
-
-    onSynchroDone() {
         return new Promise((resolve, reject) => {
             this.createServer().then(() => {
                 console.log('Server successfully started');

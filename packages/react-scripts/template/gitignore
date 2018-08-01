@@ -29,3 +29,7 @@ package/
 
 .idea/
 .idea/workspace.xml
+
+# Generated css file from less
+src/**/*.css
+src/**/*.css.map

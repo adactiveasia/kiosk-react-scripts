@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+
 module.exports = {
     getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, contentBase) {
         const resultingArr = [];

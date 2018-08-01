@@ -87,5 +87,13 @@
   "globals": {
     "ELECTRON": true,
     "isElectron": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }
