@@ -25,7 +25,6 @@ module.exports = {
         "fs-extra": "6.0.1",
         "lodash": "^4.17.10",
         "react-responsive": "^4.1.0",
-        "eslint-config-airbnb": "^16.1.0",
         "flow-bin": "^0.72.0",
         "connect": "^3.6.6",
         "body-parser": "^1.18.2",
@@ -38,6 +37,7 @@ module.exports = {
     devDependenciesToAdd: {
         "babel-loader": "7.1.2",
         "babel-preset-airbnb": "^2.5.3",
+        "eslint-config-airbnb": "^16.1.0",
         "uglifyjs-webpack-plugin": "^1.2.7",
         "webpack": "^3.12.0"
     },
