@@ -4,7 +4,6 @@ const fs = require('fs');
 module.exports = {
     getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, contentBase) {
         const resultingArr = [];
-        const startingString = 'localhost:9001';
 
         function createImagePath(fileName, appendToPathString) {
             const filePath = `${contentBase}/${appendToPathString}/${fileName}`;
@@ -19,7 +18,7 @@ module.exports = {
             }
 
             if (stats.isFile()) {
-                const tempUrl = `${startingString}/${appendToPathString}/${fileName}`;
+                const tempUrl = `/${appendToPathString}/${fileName}`;
 
                 return resultingArr.push(`http://${tempUrl}`);
             }

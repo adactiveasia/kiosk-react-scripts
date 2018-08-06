@@ -1,3 +1,5 @@
+const path = require('path');
+
 let applicationLogger = {
     log(level, msg, context) { console.log(`[${level}]: ${msg}`); if (context) { console.log(context); } },
     error(...args) { return this.log('error', ...args); },
@@ -24,7 +26,7 @@ const options = {
     port: 8080,
     jsonConfigFile: './config.json',
     data_folder: './local',
-    path: './public/',
+    path: path.resolve(__dirname, '..'),
     logger: applicationLogger,
     site: 339,
     cache: {

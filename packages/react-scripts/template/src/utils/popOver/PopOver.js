@@ -1,6 +1,8 @@
 // @flow
 
 import { Math as ThreeMath } from 'three';
+import downArrow from './down-arrow.svg';
+import upArrow from './up-arrow.svg';
 
 const fontHeightCache = new Map();
 
@@ -10,58 +12,103 @@ let workingCanvas = null;
  * @public
  */
 class PopOver {
+
     constructor(text, options) {
-        const lines = text.split('\n');
+        this.text = text;
+        this.options = options;
+    }
 
-        workingCanvas = document.createElement('canvas');
-        workingCanvas.style.border = '1px solid black';
+    build() {
+        return new Promise(
+            (resolve)=> {
+                const lines = this.text.split('\n');
 
-        const fontHeight = this.getFontHeight(options.size, options.font, workingCanvas);
-        const lineHeight = fontHeight * options.lineHeight;
-        const textHeight = lines.length * lineHeight;
+                workingCanvas = document.createElement('canvas');
+                workingCanvas.style.border = '1px solid black';
 
-        let textWidth = 0;
-        lines.forEach((line) => {
-            textWidth = Math.max(
-                textWidth,
-                this.getTextWidth(line, options.size, options.font, workingCanvas),
-            );
-        });
+                const fontHeight = this.getFontHeight(this.options.size, this.options.font, workingCanvas);
+                const lineHeight = fontHeight * this.options.lineHeight;
+                const textHeight = lines.length * lineHeight;
 
-        const stokeWidth = 1;
-        const width = textWidth + options.backgroundPadding + (stokeWidth * 2);
-        const height = textHeight + options.backgroundPadding + (stokeWidth / 3) + options.pinHeight;
+                let textWidth = 0;
+                lines.forEach((line) => {
+                    textWidth = Math.max(
+                        textWidth,
+                        this.getTextWidth(line, this.options.size, this.options.font, workingCanvas),
+                    );
+                });
 
-        workingCanvas.width = width * options.quality;
-        workingCanvas.height = height * options.quality;
+                const stokeWidth = 1;
+                const marginLeft = this.options.directionIcon !== null ? 7 : 0;
+                const width = marginLeft + textWidth + this.options.backgroundPadding + (stokeWidth * 2);
+                const height = textHeight + this.options.backgroundPadding + (stokeWidth / 3) + this.options.pinHeight;
 
-        const ctx = workingCanvas.getContext('2d');
-        ctx.scale(options.quality, options.quality);
+                workingCanvas.width = width * this.options.quality;
+                workingCanvas.height = height * this.options.quality;
 
-        ctx.clearRect(0, 0, width, height);
+                const ctx = workingCanvas.getContext('2d');
+                ctx.scale(this.options.quality, this.options.quality);
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.strokeStyle = '#7b0e19';
-        this.drawPopOver(ctx, 0, 0, width, height, options.pinHeight, stokeWidth);
+                ctx.clearRect(0, 0, width, height);
 
-        ctx.textBaseline = 'hanging';
-        ctx.textAlign = 'center';
-        ctx.font = `${options.size}pt ${options.font}`;
-        ctx.fillStyle = '#000000';
+                ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                ctx.strokeStyle ="rgba(0, 0, 0, 0.7)";
+                this.drawPopOver(ctx, 0, 0, width, height, this.options.pinHeight, stokeWidth, 2);
 
-        const lineMarginTop = (lineHeight - fontHeight) / 2;
+                if(this.options.directionIcon !== null) {
+                    const img = new Image();
+                    img.src = this.options.directionIcon === "up" ? upArrow : downArrow;
+                    img.onload = ()=> {
+                        this.addText(ctx, lines, width, lineHeight, fontHeight, stokeWidth, marginLeft).then(
+                            (firstOffsetY)=>{
+                                const adjust = this.options.directionIcon === "up" ? 2 : 1;
+                                ctx.drawImage(img, 2, firstOffsetY - adjust , marginLeft,lineHeight);
+                                this.drawToCanvas(workingCanvas);
+                                resolve();
+                            }
+                        );
+                    };
+                } else {
+                    this.addText(ctx, lines, width, lineHeight, fontHeight, stokeWidth, marginLeft).then(
+                        ()=>{
+                            this.drawToCanvas(workingCanvas);
+                            resolve();
+                        }
+                    );
+                }
+            }
+        );
+    }
 
-        let offsetY = lineMarginTop + (options.backgroundPadding / 2) + (stokeWidth) + options.fontHeightOffset;
-        for (let k = 0; k < lines.length; k++) {
-            ctx.fillText(
-                lines[k],
-                (width / 2) - (stokeWidth),
-                offsetY,
-            );
 
-            offsetY += lineHeight + lineMarginTop;
-        }
+    addText( ctx, lines, width, lineHeight, fontHeight, stokeWidth, marginLeft) {
+        return new Promise(
+            (resolve)=> {
+                ctx.textBaseline = 'hanging';
+                ctx.textAlign = 'center';
+                ctx.font = `${this.options.size}pt ${this.options.font}`;
+                ctx.fillStyle = '#ffffff';
 
+                const lineMarginTop = (lineHeight - fontHeight) / 2;
+
+                let offsetY = lineMarginTop + (this.options.backgroundPadding / 2) + (stokeWidth) + this.options.fontHeightOffset;
+                const firstOffsetY = offsetY;
+                for (let k = 0; k < lines.length; k++) {
+                    ctx.fillText(
+                        lines[k],
+                        (width / 2) - (stokeWidth) + (marginLeft/2),
+                        offsetY,
+                    );
+
+                    offsetY += lineHeight + lineMarginTop;
+                }
+
+                resolve(firstOffsetY);
+            }
+        );
+    }
+
+    drawToCanvas(workingCanvas) {
         this._canvas = document.createElement('canvas');
         this._canvas.width = ThreeMath.floorPowerOfTwo(workingCanvas.width);
         this._canvas.height = ThreeMath.floorPowerOfTwo(workingCanvas.height);
@@ -72,26 +119,27 @@ class PopOver {
         );
     }
 
-    drawPopOver(ctx, x, y, width, height, pinHeight, stokeWidth) {
+    drawPopOver(ctx, x, y, width, height, pinHeight, stokeWidth, cornerRadius) {
         ctx.lineWidth = stokeWidth;
         const shifted = {
             x: x + (stokeWidth / 2),
             y: y + (stokeWidth / 2)
         };
-        const pinOffsetled = pinHeight - stokeWidth;
+        //const pinOffsetled = pinHeight - stokeWidth;
         const reduced = {
             width: width - (stokeWidth * 3),
             height: height - (stokeWidth) - pinHeight
         };
         ctx.beginPath();
-        ctx.moveTo(shifted.x, shifted.y);
-        ctx.lineTo(shifted.x + reduced.width, shifted.y);
-        ctx.lineTo(shifted.x + reduced.width, shifted.y + reduced.height);
-        ctx.lineTo(shifted.x, shifted.y + reduced.height);
-        ctx.lineTo(shifted.x, shifted.y + reduced.height + pinOffsetled);
-        ctx.lineTo(shifted.x + pinOffsetled, shifted.y + reduced.height);
-        ctx.lineTo(shifted.x, shifted.y + reduced.height);
-        ctx.lineTo(shifted.x, shifted.y);
+        ctx.moveTo(shifted.x + cornerRadius, shifted.y);
+        ctx.lineTo(shifted.x + reduced.width  - cornerRadius, shifted.y);
+        ctx.arcTo(shifted.x + reduced.width, shifted.y, shifted.x + reduced.width, shifted.y + cornerRadius, cornerRadius);
+        ctx.lineTo(shifted.x + reduced.width, shifted.y + reduced.height - cornerRadius);
+        ctx.arcTo(shifted.x + reduced.width,  shifted.y + reduced.height, shifted.x + reduced.width - cornerRadius,  shifted.y + reduced.height , cornerRadius);
+        ctx.lineTo(shifted.x  + cornerRadius, shifted.y + reduced.height);
+        ctx.arcTo(shifted.x,  shifted.y + reduced.height, shifted.x,  shifted.y + reduced.height - cornerRadius , cornerRadius);
+        ctx.lineTo(shifted.x, shifted.y + cornerRadius);
+        ctx.arcTo(shifted.x,  shifted.y, shifted.x + cornerRadius,  shifted.y , cornerRadius);
         ctx.closePath();
         ctx.stroke();
         ctx.fill();

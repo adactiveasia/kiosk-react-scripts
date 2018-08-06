@@ -9,19 +9,27 @@ module.exports = {
     output: {
         path: path.join(`${__dirname}/../`, '/public/server'),
         libraryTarget: 'commonjs2',
-        filename: 'application-server.min.js'
+        filename: 'application-server.js'
     },
     module: {
         rules: [
             {
+                // Disable AMD which is messing up with is-windows
                 test: /\.js$/,
-                include: [path.join(__dirname + '/../', "server")],
+                use: "imports-loader?define=>false"
+            },
+            {
+                test: /\.js$/,
+                include: [
+                    path.join(__dirname + '/../server'),
+                    path.join(__dirname + '/../node_modules/@adactive'),
+                ],
                 use: [{
                     loader: 'babel-loader',
                     options: {
                         babelrc: false,
                         presets: [
-                            ['airbnb', { node: 8 }],
+                            ['airbnb', { targets: { node: 8 } }],
                         ]
                     }
                 }]

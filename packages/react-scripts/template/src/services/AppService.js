@@ -9,7 +9,7 @@ class AppService {
 
     preloadAppImages() {
         console.log('Fetching Image Urls for preloading...');
-        return fetch('http://localhost:9001/getAllAppImageUrls')
+        return fetch('/getAllAppImageUrls')
             .then(response => response.json())
             .then((data) => {
                 this.appImages = _.map(data.urls, (url) => {

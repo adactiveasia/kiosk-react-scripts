@@ -1,15 +1,10 @@
 import http from 'http';
-import fs from 'fs';
-import url from 'url';
-
-import check from 'check-types';
-
-import bodyParser from 'body-parser';
 import compression from 'compression';
-import connect from 'connect';
+import express from 'express';
 import serveStatic from 'serve-static';
 import cors from 'cors';
-import { LocalCacheManager } from '@adactive/adsum-client-api';
+
+import { TrackingAppProxy } from '@adactive/adsum-client-analytics';
 
 import Options from './Options';
 import imageUrlsFetcher from './ImageUrlsFetcher';
@@ -29,26 +24,26 @@ class Server {
         this.app = null;
         this.server = null;
 
-        /**
-         *
-         * @type {LocalCacheManager}
-         */
-        this.cacheManager = new LocalCacheManager(this.options.data_folder);
+        this.proxyAnalytics = new TrackingAppProxy({
+            prefix: '/analytics',
+        });
     }
 
     start() {
-        return new Promise((resolve, reject) => {
-            this.createServer().then(() => {
-                console.log('Server successfully started');
-                resolve({
+        return this.createServer()
+            .then(() => {
+                this.options.logger.info('Server successfully started');
+
+                return {
                     url: `http://${this.options.hostname}:${this.options.port}/`,
                     app: this.app,
-                });
-            }, (e) => {
-                console.log('Server failed to start !');
-                reject(e);
+                };
+            })
+            .catch((e) => {
+                this.options.logger.error('Server failed to start !');
+
+                return Promise.reject(e);
             });
-        });
     }
 
     createServer(app) {
@@ -122,65 +117,45 @@ class Server {
         });
     }
 
-    bind(app = connect()) {
+    /**
+     * Separate this in order to be used by webpack dev server
+     * @param app
+     */
+    bindApis(app) {
+        this.proxyAnalytics.bind(app);
+        this.proxyAnalytics.start(this.options.production ? 3600 * 1000 : 1000);
+
+        // app.use('/getAllAppImageUrls', (req, res, next) => {
+        //     const arrOfEntryPointsRelativeToPublicDir = [
+        //         'assets/images',
+        //         'local/bin',
+        //     ];
+        //
+        //     let urls = [];
+        //     try {
+        //         urls = imageUrlsFetcher.getAllImageUrlsArr(
+        //             arrOfEntryPointsRelativeToPublicDir,
+        //             this.options.path,
+        //         );
+        //     } catch (e) {
+        //         this.options.logger.error('An error occured in getAllAppImageUrls');
+        //         console.error(e);
+        //     }
+        //
+        //     res.end(JSON.stringify({ urls }));
+        //     next();
+        // });
+    }
+
+    bind(app = express()) {
         app.use(cors());
         app.use(compression());
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: true }));
 
-        const { route } = this.options;
+        app.use('/', serveStatic(this.options.path, { maxAge: '1d' }));
 
-        app.use(`${route}`, serveStatic(this.options.path, { maxAge: '1d' }));
-
-        app.use(`${route}/deviceConfig`, (req, res, next) => {
-            res.end(JSON.stringify(this.options.config));
-            next();
-        });
-
-        // request /localFile?path=..
-        app.use(`${route}/localFile`, (req, res, next) => {
-            const { query } = url.parse(req.url, true);
-
-            let data;
-            try {
-                data = fs.readFileSync(query.path);
-            } catch (e) {
-                const path = query.path.replace(/\\/g, '/');
-                data = fs.readFileSync(path);
-            }
-
-            console.log(`Get local file : ${query.path}`);
-            res.end(data);
-
-            next();
-        });
-
-        app.use(`${route}/getAllAppImageUrls`, (req, res, next) => {
-            const arrOfEntryPointsRelativeToPublicDir = [
-                'assets/images',
-                'local/bin',
-            ];
-
-            let urls = [];
-            try {
-                urls = imageUrlsFetcher.getAllImageUrlsArr(
-                    arrOfEntryPointsRelativeToPublicDir,
-                    this.options.path,
-                );
-            } catch (e) {
-                console.error('An error occured in getAllAppImageUrls');
-                console.log(e);
-            }
-
-            res.end(JSON.stringify({ urls }));
-            next();
-        });
+        this.bindApis(app);
 
         this.app = app;
-
-        this.options.logger.info('[Server] Middleware bound', {
-            route,
-        });
 
         return this.app;
     }

@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { Element, } from 'react';
 import { connect } from 'react-redux';
 
-import { Map } from '@adactive/arc-map';
+import { Map, mapActions } from '@adactive/arc-map';
 import type { MapStateType } from '@adactive/arc-map/src/initialState';
 import { ClientAPI as ACA } from '@adactive/adsum-utils';
 
@@ -16,12 +16,16 @@ import logo from './logo.svg';
 import './App.css';
 import appService from './services/AppService';
 
+import PopOver from './utils/popOver/PopOver';
+
 type MappedStatePropsType = {|
     pathName: string,
     mapState: MapStateType
 |};
 
-type MappedDispatchPropsType = {||};
+type MappedDispatchPropsType = {|
+    onMapClicked: (object) => void
+|};
 type OwnPropsType = {||};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 
@@ -58,12 +62,6 @@ class App extends React.Component<PropsType, StateType> {
         }
     }
 
-    onMapClicked(object) {
-        if (object && object.placeId) {
-            // DO STUFF
-        }
-    }
-
     renderMain(): ?Element<'main'> {
         const { pathName } = this.props;
 
@@ -81,9 +79,10 @@ class App extends React.Component<PropsType, StateType> {
                     isOpen={
                         (pathName === '/')
                     }
-                    onClick={object => this.onMapClicked(object)}
+                    onClick={this.props.onMapClicked}
                     display="3D"
                     backgroundImage="assets/textures/background.png"
+                    PopOver={PopOver}
                 >
                     {/* Children */}
                 </Map>
@@ -119,7 +118,12 @@ const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
     mapState: state.map.state,
 });
 
-const mapDispatchToProps = (/* dispatch: * */): MappedDispatchPropsType => ({
+const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
+    onMapClicked: (object): void => {
+        if (object && object.placeId) {
+            dispatch(mapActions.goToPlace(object.placeId));
+        }
+    },
 });
 
 export default connect(

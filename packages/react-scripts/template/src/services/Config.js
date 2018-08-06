@@ -12,9 +12,21 @@ class Config {
         if (Number.isNaN(this.site)) {
             this.site = null;
         }
+
+        this.initPromise = null;
     }
 
     async init(): Promise<void> {
+        if (this.initPromise !== null) {
+            return this.initPromise;
+        }
+
+        this.initPromise = this.doInit();
+
+        return this.initPromise;
+    }
+
+    async doInit(): Promise<void> {
         const configFile = this.site === null ? '/config.json' : `/configs/${this.site}/config.json`;
         try {
             const response = await fetch(configFile);

@@ -8,5 +8,8 @@
   "rules": {
     "indent": ["error", 4],
     "no-prototype-builtins": "off"
+  },
+  "globals": {
+    "NODE_ENV": true
   }
 }

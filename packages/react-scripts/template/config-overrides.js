@@ -2,6 +2,8 @@
 
 const path = require('path');
 const { getBabelLoader } = require('react-app-rewired');
+const { Server } = require('./public/server/application-server');
+const serverOptions = require('./public/server/options');
 
 module.exports = {
     // The Webpack config to use when compiling your react app for development or production.
@@ -32,6 +34,17 @@ module.exports = {
 
             // Comment next line to watch changes in public folder
             config.watchContentBase = false;
+
+            const baseBefore = config.before;
+            config.before = (app, ...rest) => {
+                serverOptions.production = false;
+                const appServer = new Server(serverOptions);
+                appServer.bindApis(app);
+
+                if (typeof baseBefore === 'function') {
+                    baseBefore(app, ...rest);
+                }
+            };
 
             // Return your customised Webpack Development Server config.
             return config;

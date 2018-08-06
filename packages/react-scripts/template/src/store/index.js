@@ -10,13 +10,16 @@ import rootReducer from '../rootReducer';
 import rootSaga from '../rootSaga';
 import { routerMiddleware } from '../router';
 
+import analyticsMiddleware from './analytics/analyticsMiddleware';
+
 const sagaMiddleware = createSagaMiddleware();
 const initialState = {};
 const enhancers = [];
 const middleware: Array<Middleware> = [
     thunk,
     routerMiddleware,
-    sagaMiddleware
+    sagaMiddleware,
+    analyticsMiddleware,
 ];
 
 if (process.env.NODE_ENV === 'development') {

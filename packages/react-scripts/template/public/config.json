@@ -9,9 +9,11 @@
         "username": "170-device",
         "key": "6c15cae0c6594c063a713b91b2e0cb0c56a9d0cee823f16ff80606d1e91ef19b"
     },
-    "analyticsLegacy": {
-        "endpoint": "https://analytics.adsum.io/piwik.php",
-        "site": 1,
-        "token": "f4a8be0670524ee957374a44dfe278e9"
+    "analytics": {
+        "endpoint": "https://analytics.adsum.io",
+        "site": 240,
+        "device": 170,
+        "zone": "asia",
+        "token": "a30bd25d3d7a1d0c61944637597f4509"
     }
 }

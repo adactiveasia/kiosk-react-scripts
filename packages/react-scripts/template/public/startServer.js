@@ -1,4 +1,4 @@
-const { Server, DataUpdater } = require('./server/application-server.min');
+const { Server, DataUpdater } = require('./server/application-server');
 const serverOptions = require('./server/options');
 
 const updater = new DataUpdater();
