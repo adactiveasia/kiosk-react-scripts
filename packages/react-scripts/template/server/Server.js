@@ -1,17 +1,18 @@
-import Options from "./Options";
-import check from "check-types";
+import http from 'http';
+import fs from 'fs';
+import url from 'url';
 
-import bodyParser from "body-parser";
-import compression from "compression";
-import connect from "connect";
-import serveStatic from "serve-static";
-import http from "http";
-import fs from "fs";
-import cors from "cors";
+import check from 'check-types';
 
-import imageUrlsFetcher from './ImageUrlsFetcher';
-
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import connect from 'connect';
+import serveStatic from 'serve-static';
+import cors from 'cors';
 import { LocalCacheManager } from '@adactive/adsum-client-api';
+
+import Options from './Options';
+import imageUrlsFetcher from './ImageUrlsFetcher';
 
 /**
  *
@@ -20,57 +21,31 @@ class Server {
     /**
      * Create a new server
      *
-     * Note: the provided option will be frozen to prevent modifications
-     *
-     * @param {ServerOptions} options
+     * @param {Options|object} options
      */
     constructor(options) {
-        check.assert.instance(options, Options, "options are required");
-
-        this.options = options;
+        this.options = new Options(options);
 
         this.app = null;
         this.server = null;
 
         /**
-        *
-        * @type {LocalCacheManager}
-        */
+         *
+         * @type {LocalCacheManager}
+         */
         this.cacheManager = new LocalCacheManager(this.options.data_folder);
-
     }
 
     start() {
-        const time = Date.now();
-
-        return this.cacheManager.update(
-            this.options.config.site, // Site Id
-            this.options.cache, // Cache options
-        ).then((updated) => {
-            console.log(`Sync success in ${parseInt((Date.now() - time) / 1000)} seconds`);
-
-            if (updated) {
-                console.log('Cache up-to-date');
-            } else {
-                console.log('Cache is present but might be outdated (no Internet connexion)');
-            }
-
-            return this.onSynchroDone();
-        }).catch((error) => {
-            console.error('Unable to update the cache, and no cache available', error);
-        });
-    }
-
-    onSynchroDone() {
         return new Promise((resolve, reject) => {
             this.createServer().then(() => {
-                console.log("Server successfully started");
+                console.log('Server successfully started');
                 resolve({
                     url: `http://${this.options.hostname}:${this.options.port}/`,
-                    app: this.app
+                    app: this.app,
                 });
             }, (e) => {
-                console.log("Server failed to start !");
+                console.log('Server failed to start !');
                 reject(e);
             });
         });
@@ -82,42 +57,40 @@ class Server {
         }
 
         return new Promise((resolve, reject) => {
-                const server = http.createServer(this.app);
+            const server = http.createServer(this.app);
 
-                server.on("error", (err) => {
-                    this.options.logger.error("[Server] Server error", {
-                        error: {
-                            message: err.message,
-                            stack: err.stack
-                        }
-                    });
-
-                    reject(err);
+            server.on('error', (err) => {
+                this.options.logger.error('[Server] Server error', {
+                    error: {
+                        message: err.message,
+                        stack: err.stack,
+                    },
                 });
 
-                server.on('clientError', (err, socket) => {
-                    this.options.logger.warn("[Server] Client connection error", {
-                        error: {
-                            message: err.message,
-                            stack: err.stack
-                        }
-                    });
+                reject(err);
+            });
 
-                    socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+            server.on('clientError', (err, socket) => {
+                this.options.logger.warn('[Server] Client connection error', {
+                    error: {
+                        message: err.message,
+                        stack: err.stack,
+                    },
                 });
 
-                server.listen(this.options.port, this.options.hostname, () => {
-                    this.options.logger.info("[Server] Server started", {
-                        protocol: "http",
-                        hostname: this.options.hostname,
-                        port: this.options.port
-                    });
+                socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+            });
 
-                    resolve(server);
+            server.listen(this.options.port, this.options.hostname, () => {
+                this.options.logger.info('[Server] Server started', {
+                    protocol: 'http',
+                    hostname: this.options.hostname,
+                    port: this.options.port,
                 });
-            }
-        );
 
+                resolve(server);
+            });
+        });
     }
 
     /**
@@ -129,21 +102,21 @@ class Server {
      */
     stop() {
         if (this.server === null || !this.server.listening) {
-            return;
+            return Promise.resolve();
         }
 
         return new Promise((resolve, reject) => {
-            this.server.on("close", () => {
-                this.options.logger.info("[Server] Server stopped", {
+            this.server.on('close', (err) => {
+                this.options.logger.info('[Server] Server stopped', {
                     error: {
                         message: err.message,
-                        stack: err.stack
-                    }
+                        stack: err.stack,
+                    },
                 });
             });
 
             // Error will be logged via start error listener
-            this.server.on("error", reject);
+            this.server.on('error', reject);
 
             this.server.close();
         });
@@ -153,60 +126,60 @@ class Server {
         app.use(cors());
         app.use(compression());
         app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(bodyParser.urlencoded({ extended: true }));
 
-        const route = this.options.route;
+        const { route } = this.options;
 
         app.use(`${route}`, serveStatic(this.options.path, { maxAge: '1d' }));
 
-        app.use(`${route}/deviceConfig`,  (req, res, next) =>{
+        app.use(`${route}/deviceConfig`, (req, res, next) => {
             res.end(JSON.stringify(this.options.config));
             next();
         });
 
         // request /localFile?path=..
         app.use(`${route}/localFile`, (req, res, next) => {
-            let url = require('url');
-            let url_parts = url.parse(req.url, true);
-            let query = url_parts.query;
+            const { query } = url.parse(req.url, true);
 
             let data;
             try {
                 data = fs.readFileSync(query.path);
             } catch (e) {
-                let path = query.path.replace(/\\/g, '/');
+                const path = query.path.replace(/\\/g, '/');
                 data = fs.readFileSync(path);
             }
 
-            console.log("Get local file : " + query.path);
+            console.log(`Get local file : ${query.path}`);
             res.end(data);
 
             next();
         });
 
-        app.use(`${route}/getAllAppImageUrls`,  (req, res, next) =>{
-            const {site, device} = this.options.config;
+        app.use(`${route}/getAllAppImageUrls`, (req, res, next) => {
             const arrOfEntryPointsRelativeToPublicDir = [
                 'assets/images',
-                'local/bin'
+                'local/bin',
             ];
 
             let urls = [];
             try {
-                urls = imageUrlsFetcher.getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, this.options.path);
-            } catch(e) {
+                urls = imageUrlsFetcher.getAllImageUrlsArr(
+                    arrOfEntryPointsRelativeToPublicDir,
+                    this.options.path,
+                );
+            } catch (e) {
                 console.error('An error occured in getAllAppImageUrls');
                 console.log(e);
             }
 
-            res.end(JSON.stringify({urls}));
+            res.end(JSON.stringify({ urls }));
             next();
         });
 
         this.app = app;
 
-        this.options.logger.info("[Server] Middleware bound", {
-            route
+        this.options.logger.info('[Server] Middleware bound', {
+            route,
         });
 
         return this.app;

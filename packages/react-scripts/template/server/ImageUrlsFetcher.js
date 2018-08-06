@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+
 
 module.exports = {
     getAllImageUrlsArr(arrOfEntryPointsRelativeToPublicDir, contentBase) {
@@ -13,19 +13,22 @@ module.exports = {
             if (stats.isDirectory()) {
                 const fileNames = fs.readdirSync(filePath);
 
-                if (!fileNames || !fileNames.length) return;
+                if (!fileNames || !fileNames.length) return [];
 
                 return fileNames.forEach(innerFileName => createImagePath(innerFileName, `${appendToPathString}/${fileName}`));
             }
+
             if (stats.isFile()) {
-                let tempUrl = `${startingString}/${appendToPathString}/${fileName}`;
+                const tempUrl = `${startingString}/${appendToPathString}/${fileName}`;
 
                 return resultingArr.push(`http://${tempUrl}`);
             }
+
+            return [];
         }
 
         arrOfEntryPointsRelativeToPublicDir.forEach(entryPoint => createImagePath(entryPoint, ''));
 
         return resultingArr;
-    }
+    },
 };

@@ -1,11 +1,18 @@
-const AS = require('./server/application-server.es6');
+const { Server, DataUpdater } = require('./server/application-server.min');
 const serverOptions = require('./server/options');
 
-let server = new AS.Server(new AS.Options(serverOptions));
+const updater = new DataUpdater();
 
-server.start().then((server) => {
+updater
+    .update(__dirname)
+    .then(() => {
+        let server = new Server(serverOptions);
 
-}, console.log);
-
-
-
+        server
+            .start()
+            .then(
+                (server) => {
+                },
+                console.error,
+            );
+    });

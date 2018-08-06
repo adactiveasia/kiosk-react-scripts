@@ -7,7 +7,7 @@ import type { MapReducersType } from '@adactive/arc-map/src/MapReducers';
 
 export type RoutingReducerType = {|
     location: {|
-    pathname: string,
+        pathname: string,
         search: string,
         hash: string
     |}
@@ -19,8 +19,8 @@ export type AppStateType = {|
 |};
 
 const appState: AppState = {
-  routing: routerReducer,
-  map
+    routing: routerReducer,
+    map
 };
 
 export default combineReducers(appState);
