@@ -1,13 +1,13 @@
 const path = require('path');
-const { DefinePlugin } = require('webpack');
+const {DefinePlugin} = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     cache: true,
     target: 'node',
-    entry: ['./server/index'],
+    entry: ['./server/src/index'],
     output: {
-        path: path.join(`${__dirname}/../`, '/public/server'),
+        path: path.join(`${__dirname}/../`, '/server/build'),
         libraryTarget: 'commonjs2',
         filename: 'application-server.js'
     },
@@ -21,7 +21,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
-                    path.join(__dirname + '/../server'),
+                    path.join(__dirname + '/../server/src'),
                     path.join(__dirname + '/../node_modules/@adactive'),
                 ],
                 use: [{
@@ -29,7 +29,12 @@ module.exports = {
                     options: {
                         babelrc: false,
                         presets: [
-                            ['airbnb', { targets: { node: 8 } }],
+                            [
+                                'airbnb',
+                                {
+                                    targets: {node: 8}
+                                }
+                            ],
                         ]
                     }
                 }]
@@ -38,6 +43,6 @@ module.exports = {
     },
     plugins: [
         new UglifyJsPlugin(),
-        new DefinePlugin({ "process.env.NODE_ENV": JSON.stringify("production") }),
+        new DefinePlugin({"process.env.NODE_ENV": JSON.stringify("production")}),
     ]
 };

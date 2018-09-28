@@ -1,6 +1,7 @@
 import { LocalCacheManager } from '@adactive/adsum-client-api';
 import { createLogger, transports, format } from 'winston';
 import fs from 'fs';
+import path from 'path';
 
 const color = format.colorize({ all: true });
 
@@ -49,11 +50,11 @@ class DataUpdater {
                 }),
             ],
         });
-
-        this.cacheManager = new LocalCacheManager('./public/local');
     }
 
     update(publicDir) {
+        const cacheManager = new LocalCacheManager(path.join(publicDir, 'local'));
+
         return this.getConfigs(publicDir)
             .then((configs) => {
                 if (configs.length === 0) {
@@ -66,7 +67,7 @@ class DataUpdater {
 
                 this.logger.info(`Will update ${configs.length} sites`);
 
-                return Promise.all(configs.map(config => this.updateSite(config)));
+                return Promise.all(configs.map(config => this.updateSite(config, cacheManager)));
             });
     }
 
@@ -140,10 +141,10 @@ class DataUpdater {
         });
     }
 
-    updateSite(config) {
+    updateSite(config, cacheManager) {
         const profiler = this.logger.startTimer();
 
-        return this.cacheManager.update(config.api.site, config.api)
+        return cacheManager.update(config.api.site, config.api)
             .then((updated) => {
                 if (updated) {
                     profiler.done({

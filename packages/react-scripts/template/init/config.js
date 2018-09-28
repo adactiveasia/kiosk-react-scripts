@@ -2,9 +2,10 @@ const path = require('path');
 
 module.exports = {
     scriptsToAdd: {
-        start: "npm run build-css && run-p -ncr watch-css start-js",
+        start: "npm run compile-server && npm run build-css && run-p -ncr watch-css start-js",
+        eject: "react-scripts eject",
         "start-js": "react-app-rewired start --scripts-version @adactive/kiosk-react-scripts",
-        build: "run-s -n build-css build-js",
+        build: "npm run compile-server && run-s -n build-css build-js",
         "build-js": "react-app-rewired build --scripts-version @adactive/kiosk-react-scripts",
         test: "run-s -n build-css test-js",
         "test-js": "react-app-rewired test --env=jsdom --scripts-version @adactive/kiosk-react-scripts",
@@ -12,13 +13,15 @@ module.exports = {
         "watch-css": "node-less-chokidar src --watch",
         serve: "cd build && ws --spa",
         "compile-server": "webpack --config ./build-conf/webpack.config.server.js",
-        doc: "jsdoc -c ./build-conf/jsdoc_conf.app.json -t ./node_modules/ink-docstrap/template",
-        "doc-server": "jsdoc -c ./build-conf/jsdoc_conf.server.json -t ./node_modules/ink-docstrap/template",
-        "startServer": "node ./public/startServer --port 9001 --jsonConfigFile ./public/config.json --data_folder ./public/local"
+        "adloader:step:setup": "adloader setup",
+        "adloader:step:package": "adloader package",
+        "adloader:step:installer": "adloader installer",
+        "adloader": "npm run adloader:step:setup && npm run adloader:step:package && npm run adloader:step:install"
     },
     dependenciesToAdd: {
         "@adactive/adactive-abstract-options": "^1.0.0",
         "@adactive/adactive-logger": "^1.0.0",
+        "@adactive/adsum-adloader": "^3.0.0-alpha.1",
         "@adactive/adsum-client-analytics": "^3.0.0-rc.4",
         "@adactive/adsum-client-api": "^2.3.2",
         "@adactive/adsum-utils": "^0.0.2-y.44.46",
@@ -31,7 +34,6 @@ module.exports = {
         "express": "^4.16.3",
         "flow-bin": "^0.72.0",
         "fs-extra": "6.0.1",
-        "imports-loader": "^0.8.0",
         "lodash": "^4.17.10",
         "react": "^16.4.2",
         "react-dom": "^16.4.2",
@@ -42,7 +44,11 @@ module.exports = {
     devDependenciesToAdd: {
         "babel-loader": "7.1.2",
         "babel-preset-airbnb": "^2.5.3",
+        "eslint": "^5.3.0",
         "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-import": "^2.13.0",
+        "glob": "^7.1.2",
+        "imports-loader": "^0.8.0",
         "uglifyjs-webpack-plugin": "^1.2.7",
         "webpack": "^3.12.0"
     },

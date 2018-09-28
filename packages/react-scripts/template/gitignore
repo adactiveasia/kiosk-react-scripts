@@ -33,3 +33,9 @@ package/
 # Generated css file from less
 src/**/*.css
 src/**/*.css.map
+
+# adloader
+adloader-project
+adloader-package
+adloader-installer
+data
