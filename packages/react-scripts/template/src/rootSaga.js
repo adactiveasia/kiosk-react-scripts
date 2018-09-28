@@ -4,6 +4,6 @@ import mapSaga from '@adactive/arc-map/src/MapSaga';
 
 export default function* rootSaga() {
     yield all([
-        mapSaga()
+        mapSaga(),
     ]);
 }

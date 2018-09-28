@@ -7,7 +7,6 @@ import cors from 'cors';
 import { TrackingAppProxy } from '@adactive/adsum-client-analytics';
 
 import Options from './Options';
-import imageUrlsFetcher from './ImageUrlsFetcher';
 
 /**
  *

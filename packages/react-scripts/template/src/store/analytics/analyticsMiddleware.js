@@ -4,7 +4,7 @@ import config from '../../services/Config';
 
 let tracker = null;
 
-config.init().then(() => {
+config.wait().then(() => {
     tracker = new Tracker(Object.assign({}, config.config.analytics, { endpoint: '/analytics' }));
     tracker.start(200);
 });

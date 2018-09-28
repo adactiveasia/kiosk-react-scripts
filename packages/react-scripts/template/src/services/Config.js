@@ -1,41 +1,43 @@
 // @flow
-import queryString from 'query-string';
 
 class Config {
     constructor() {
         this.config = null;
+        this.site = null;
 
-        const { site } = queryString.parse(window.location.search);
-
-        this.site = parseInt(site, 10);
-
-        if (Number.isNaN(this.site)) {
-            this.site = null;
-        }
-
-        this.initPromise = null;
+        this.initPromise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
     }
 
-    async init(): Promise<void> {
-        if (this.initPromise !== null) {
-            return this.initPromise;
-        }
-
-        this.initPromise = this.doInit();
-
+    async wait(): Promise<void> {
         return this.initPromise;
     }
 
-    async doInit(): Promise<void> {
-        const configFile = this.site === null ? '/config.json' : `/configs/${this.site}/config.json`;
+    async init(siteId: number): Promise<void> {
+        return this.doInit(siteId)
+            .then(() => {
+                this.resolve();
+            })
+            .catch((e) => {
+                this.reject(e);
+            });
+    }
+
+    async doInit(siteId: number): Promise<void> {
+        this.site = siteId;
+
+        const configFile = this.site ? `/configs/${this.site}/config.json` : '/config.json';
         try {
+            console.log('Checking config file path: ', configFile);
             const response = await fetch(configFile);
 
             this.config = await response.json();
 
-            console.log(this.config);
+            console.log('Trying to get config: ', this.config);
         } catch (e) {
-            console.error(e);
+            console.error('Unable to get config: ', e);
 
             throw new Error(`Config.js: unable to find ${configFile} file`);
         }

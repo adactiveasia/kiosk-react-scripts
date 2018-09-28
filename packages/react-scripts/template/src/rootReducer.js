@@ -20,7 +20,7 @@ export type AppStateType = {|
 
 const appState: AppState = {
     routing: routerReducer,
-    map
+    map,
 };
 
 export default combineReducers(appState);

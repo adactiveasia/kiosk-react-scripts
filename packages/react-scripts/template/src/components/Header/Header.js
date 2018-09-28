@@ -9,9 +9,9 @@ type PropsType = {|
     logo: string
 |};
 
-export default (props: PropsType): Node => (
+export default ({ logo }: PropsType): Node => (
     <header className="App-header">
-        <img src={props.logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">Welcome to React</h1>
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1 className="App-title">Welcome to Adsum</h1>
     </header>
 );

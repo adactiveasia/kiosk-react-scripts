@@ -3,6 +3,7 @@ flow-typed
 init
 node_modules
 public
+server/build
 
-// From create-creat-app
+# From create-creat-app
 src/registerServiceWorker.js

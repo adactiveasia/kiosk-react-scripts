@@ -1,14 +1,15 @@
 // @flow
 
-import { createStore, applyMiddleware, compose } from 'redux';
-import type { Middleware } from 'redux';
+import {
+    createStore, applyMiddleware, compose, Middleware
+} from 'redux';
 
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../rootReducer';
 import rootSaga from '../rootSaga';
-import { routerMiddleware } from '../router';
+import { routerMiddleware } from '../router/index';
 
 import analyticsMiddleware from './analytics/analyticsMiddleware';
 
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const createStoreWithMiddleware = compose(
     applyMiddleware(...middleware),
-    ...enhancers
+    ...enhancers,
 )(createStore);
 
 

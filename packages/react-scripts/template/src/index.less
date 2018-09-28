@@ -1,16 +1,15 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
-  width: 1920px;
-  height: 1080px;
-  font-family: sans-serif;
-  position: relative;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
-}
+  font-family: sans-serif;
+  box-sizing: border-box;
 
-@media (orientation: portrait) {
-  body {
-    height: 1920px;
-    width: 1080px;
+  #root {
+    height: 100%;
+    width: 100%;
+    position: relative;
   }
 }

@@ -90,11 +90,11 @@ class DataUpdater {
                 }));
     }
 
-    readConfigDir(path, defaultConfig = null) {
+    readConfigDir(filePath, defaultConfig = null) {
         return new Promise((resolve) => {
-            fs.readdir(path, 'utf8', (err, files) => {
+            fs.readdir(filePath, 'utf8', (err, files) => {
                 if (err) {
-                    this.logger.warn(`Unable to read ${path}`);
+                    this.logger.warn(`Unable to read ${filePath}`);
                     resolve([]);
                 } else {
                     const result = files.map(file => parseInt(file, 10))
@@ -104,7 +104,7 @@ class DataUpdater {
                             }
 
                             if (defaultConfig !== null && defaultConfig.api.site === site) {
-                                this.logger.warn(`${path} will be ignored as it is handled by default config`);
+                                this.logger.warn(`${filePath} will be ignored as it is handled by default config`);
                                 return false;
                             }
 
@@ -117,22 +117,22 @@ class DataUpdater {
         });
     }
 
-    readConfigFile(path, expectedSite = null) {
+    readConfigFile(filePath, expectedSite = null) {
         return new Promise((resolve) => {
-            fs.readFile(path, 'utf8', (err, data) => {
+            fs.readFile(filePath, 'utf8', (err, data) => {
                 let result = null;
 
                 if (err) {
-                    this.logger.warn(`Unable to read config file ${path}`);
+                    this.logger.warn(`Unable to read config file ${filePath}`);
                 } else {
                     try {
                         const config = JSON.parse(data);
 
-                        if (this.isValidConfig(config, path, expectedSite)) {
+                        if (this.isValidConfig(config, filePath, expectedSite)) {
                             result = config;
                         }
                     } catch (e) {
-                        this.logger.error(`Config file ${path} is not a valid JSON file`);
+                        this.logger.error(`Config file ${filePath} is not a valid JSON file`);
                     }
                 }
 

@@ -1,22 +1,30 @@
 // @flow
 
 import * as React from 'react';
-import type { Element, } from 'react';
+import type { Element } from 'react';
 import { connect } from 'react-redux';
 
-import { Map, mapActions } from '@adactive/arc-map';
-import type { MapStateType } from '@adactive/arc-map/src/initialState';
-import { ClientAPI as ACA } from '@adactive/adsum-utils';
+import {
+    AdsumLoader, AdsumWebMap, ArrowPathPatternOptions, DotPathBuilder, DotPathBuilderOptions,
+    PinUserObject, SingleFloorAnimation,
+} from '@adactive/adsum-web-map';
 
+import ACA from '@adactive/adsum-utils/services/ClientAPI';
+
+import { Map, WayfindingActions } from '@adactive/arc-map';
 import deviceConfig from './services/Config';
 import store from './store/index';
 
-import { Header } from './components/Header';
-import logo from './logo.svg';
-import './App.css';
-import appService from './services/AppService';
+import { Header } from './components/Header/index';
 
-import PopOver from './utils/popOver/PopOver';
+import './App.css';
+
+import logo from './assets/logo.png';
+
+type PathParmsObjectType = {|
+    siteId: number,
+    deviceId: number,
+|};
 
 type MappedStatePropsType = {|
     pathName: string,
@@ -30,7 +38,10 @@ type OwnPropsType = {||};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 
 
-type StateType = {||};
+type StateType = {|
+    mapLoaded: boolean,
+    configLoaded: boolean,
+|};
 
 class App extends React.Component<PropsType, StateType> {
     state = {
@@ -38,63 +49,105 @@ class App extends React.Component<PropsType, StateType> {
         mapLoaded: false,
     };
 
-    componentWillMount() {
+    awmContainerRef = React.createRef();
 
-    }
+    awm: ?AdsumWebMap = null;
 
     componentDidMount() {
         // Load the data
-        deviceConfig.init()
+        const pathParams = this.getPathNameParams();
+
+        deviceConfig.init(pathParams.siteId, pathParams.deviceId)
             .then((): void => ACA.init(deviceConfig.config.api))
             .then((): void => ACA.load())
-            .then((): void => appService.preloadAppImages())
             .then(() => {
+                this.awm = new AdsumWebMap({
+                    loader: new AdsumLoader({
+                        entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
+                        deviceId: pathParams.deviceId || deviceConfig.config.map.deviceId, // The device Id to use
+                        wireframeSpaces: true,
+                        wireframeSpacesOptions: { color: 0x5a5b5a },
+                    }), // The loader to use
+                    camera: {
+                        centerOnOptions: {
+                            fitRatio: 3,
+                            minDistance: 50,
+                        },
+                    },
+                    engine: {
+                        container: this.awmContainerRef.current, // The div DOMElement to insert the canvas into
+                    },
+                    wayfinding: {
+                        pathBuilder: new DotPathBuilder(new DotPathBuilderOptions({
+                            patternSpace: 2.5, // 4,
+                            patternSize: 1, // 2
+                            pattern: new ArrowPathPatternOptions({
+                                color: '#be272f',
+                            }),
+                        })),
+                        userObject: new PinUserObject({ color: '#be272f', size: 8 }),
+                    },
+                    scene: {
+                        animation: new SingleFloorAnimation({
+                            keepSiteVisible: false,
+                            bounce: true,
+                            center: true,
+                            centerOnOptions: {
+                                fitRatio: 1.15,
+                                minDistance: 300,
+                            },
+                        }),
+                    },
+                });
+
                 this.setState({ configLoaded: true });
             });
     }
 
     componentDidUpdate() {
-        if (!this.state.mapLoaded && this.props.mapState === 'idle') {
+        const { mapLoaded, configLoaded } = this.state;
+        const { mapState } = this.props;
+        if (configLoaded && !mapLoaded && mapState === 'idle') {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({
-                mapLoaded: true
-            });
+            this.setState({ mapLoaded: true });
         }
     }
 
-    renderMain(): ?Element<'main'> {
+    getPathNameParams = (): PathParmsObjectType => {
         const { pathName } = this.props;
+        const [siteId, deviceId] = pathName.replace(/^\/+|\/+$/g, '').split('/');
+        return {
+            siteId: siteId ? parseInt(siteId, 10) : null,
+            deviceId: deviceId ? parseInt(deviceId, 10) : null,
+        };
+    };
 
-        if (!this.state.configLoaded) {
-            return null;
-        }
+    renderMap = (): Map => {
+        const { pathName, onMapClicked } = this.props;
 
         return (
-            <main>
-                <Map
-                    exact
-                    path="/"
-                    store={store}
-                    device={deviceConfig.config.map.deviceId}
-                    isOpen={
-                        (pathName === '/')
-                    }
-                    onClick={this.props.onMapClicked}
-                    display="3D"
-                    backgroundImage="assets/textures/background.png"
-                    PopOver={PopOver}
-                >
-                    {/* Children */}
-                </Map>
-            </main>
+            <Map
+                store={store}
+                awm={this.awm}
+                isOpen={
+                    (pathName === '/')
+                    || (/\d+\/\d+/.test(pathName))
+                }
+                onClick={onMapClicked}
+                userObjectLabel={this.userObjectLabel}
+            >
+                <div id="adsum-web-map-container" ref={this.awmContainerRef} />
+            </Map>
         );
-    }
+    };
 
     renderLoadingScreen(): ?Element<'div'> {
-        if (!this.state.mapLoaded) {
+        const { mapLoaded } = this.state;
+
+        if (!mapLoaded) {
             return (
                 <div className="loadingScreen">
-                    LOADING...
+                    <img src={logo} alt="cwp-logo" />
                 </div>
             );
         }
@@ -107,7 +160,7 @@ class App extends React.Component<PropsType, StateType> {
             <div className="App">
                 { this.renderLoadingScreen() }
                 <Header logo={logo} />
-                { this.renderMain() }
+                { this.renderMap() }
             </div>
         );
     }
@@ -121,12 +174,12 @@ const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
     onMapClicked: (object): void => {
         if (object && object.placeId) {
-            dispatch(mapActions.goToPlace(object.placeId));
+            dispatch(WayfindingActions.goToPlaceAction(object.placeId));
         }
     },
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(App);
