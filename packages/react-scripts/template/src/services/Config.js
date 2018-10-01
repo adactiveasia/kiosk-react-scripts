@@ -15,7 +15,7 @@ class Config {
         return this.initPromise;
     }
 
-    async init(siteId: number): Promise<void> {
+    async init(siteId: ?number = null): Promise<void> {
         return this.doInit(siteId)
             .then(() => {
                 this.resolve();
@@ -25,7 +25,7 @@ class Config {
             });
     }
 
-    async doInit(siteId: number): Promise<void> {
+    async doInit(siteId: ?number = null): Promise<void> {
         this.site = siteId;
 
         const configFile = this.site ? `/configs/${this.site}/config.json` : '/config.json';

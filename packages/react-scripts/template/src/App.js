@@ -21,13 +21,7 @@ import './App.css';
 
 import logo from './assets/logo.png';
 
-type PathParmsObjectType = {|
-    siteId: number,
-    deviceId: number,
-|};
-
 type MappedStatePropsType = {|
-    pathName: string,
     mapState: MapStateType
 |};
 
@@ -54,17 +48,14 @@ class App extends React.Component<PropsType, StateType> {
     awm: ?AdsumWebMap = null;
 
     componentDidMount() {
-        // Load the data
-        const pathParams = this.getPathNameParams();
-
-        deviceConfig.init(pathParams.siteId, pathParams.deviceId)
+        deviceConfig.init()
             .then((): void => ACA.init(deviceConfig.config.api))
             .then((): void => ACA.load())
             .then(() => {
                 this.awm = new AdsumWebMap({
                     loader: new AdsumLoader({
                         entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
-                        deviceId: pathParams.deviceId || deviceConfig.config.map.deviceId, // The device Id to use
+                        deviceId: deviceConfig.config.map.deviceId, // The device Id to use
                         wireframeSpaces: true,
                         wireframeSpacesOptions: { color: 0x5a5b5a },
                     }), // The loader to use
@@ -113,26 +104,20 @@ class App extends React.Component<PropsType, StateType> {
         }
     }
 
-    getPathNameParams = (): PathParmsObjectType => {
-        const { pathName } = this.props;
-        const [siteId, deviceId] = pathName.replace(/^\/+|\/+$/g, '').split('/');
-        return {
-            siteId: siteId ? parseInt(siteId, 10) : null,
-            deviceId: deviceId ? parseInt(deviceId, 10) : null,
-        };
-    };
+    isMapOpen() { // eslint-disable-line class-methods-use-this
+        // Depending on your project, feel free to change the behavior depending on your pathName prop value
+        return true;
+    }
 
     renderMap = (): Map => {
-        const { pathName, onMapClicked } = this.props;
+        const { onMapClicked } = this.props;
 
         return (
             <Map
                 store={store}
                 awm={this.awm}
-                isOpen={
-                    (pathName === '/')
-                    || (/\d+\/\d+/.test(pathName))
-                }
+                isOpen={this.isMapOpen()}
+                className="app-map-container"
                 onClick={onMapClicked}
                 userObjectLabel={this.userObjectLabel}
             >
@@ -147,7 +132,7 @@ class App extends React.Component<PropsType, StateType> {
         if (!mapLoaded) {
             return (
                 <div className="loadingScreen">
-                    <img src={logo} alt="cwp-logo" />
+                    <p>LOADING....</p>
                 </div>
             );
         }

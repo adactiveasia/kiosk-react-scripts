@@ -2,21 +2,23 @@ const path = require('path');
 
 module.exports = {
     scriptsToAdd: {
-        start: "npm run compile-server && npm run build-css && run-p -ncr watch-css start-js",
-        eject: "react-scripts eject",
+        "start": "npm run compile-server && npm run build-css && run-p -ncr watch-css start-js",
+        "build": "npm run compile-server && run-s -n build-css build-js",
+        "lint": "eslint .",
+        "test": "run-s -n build-css test-js",
+        "eject": "react-scripts eject",
         "start-js": "react-app-rewired start --scripts-version @adactive/kiosk-react-scripts",
-        build: "npm run compile-server && run-s -n build-css build-js",
         "build-js": "react-app-rewired build --scripts-version @adactive/kiosk-react-scripts",
-        test: "run-s -n build-css test-js",
         "test-js": "react-app-rewired test --env=jsdom --scripts-version @adactive/kiosk-react-scripts",
         "build-css": "node-less-chokidar src",
         "watch-css": "node-less-chokidar src --watch",
-        serve: "cd build && ws --spa",
+        "serve": "cd build && ws --spa",
         "compile-server": "webpack --config ./build-conf/webpack.config.server.js",
         "adloader:step:setup": "adloader setup",
         "adloader:step:package": "adloader package",
         "adloader:step:installer": "adloader installer",
-        "adloader": "npm run adloader:step:setup && npm run adloader:step:package && npm run adloader:step:install"
+        "adloader:step:deploy": "adloader deploy",
+        "adloader": "adloader all"
     },
     dependenciesToAdd: {
         "@adactive/adactive-abstract-options": "^1.0.0",
