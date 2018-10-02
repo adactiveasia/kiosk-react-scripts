@@ -1,8 +1,7 @@
 // @flow
 
-import {
-    createStore, applyMiddleware, compose, Middleware
-} from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import type { Middleware } from 'redux';
 
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';

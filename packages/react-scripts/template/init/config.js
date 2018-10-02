@@ -58,6 +58,7 @@ module.exports = {
         "eslint-plugin-react": "^7.11.1",
         "glob": "^7.1.2",
         "imports-loader": "^0.8.0",
+        "react-app-rewired": "^1.6.2",
         "uglifyjs-webpack-plugin": "^1.2.7",
         "webpack": "^3.12.0"
     },
