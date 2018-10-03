@@ -37,6 +37,14 @@ Promise.resolve()
   .then(
     (firebaseConfig) => {
       if(firebaseConfig) {
+        writeJsonFile(fileLocations.firebaserc, {
+          "projects": {
+            "production": firebaseConfig.projectId,
+            "staging": firebaseConfig.projectId + "-stg",
+            "dev": firebaseConfig.projectId + "-dev"
+          }
+        }
+      );
         writeJsonFile(fileLocations.firebaseConfigLocation,firebaseConfig)
       } else {
         deleteFile(fileLocations.firebaseServiceLocation)
@@ -47,4 +55,6 @@ Promise.resolve()
   .then(removeIniterDependencies.bind(null, dependenciesToRemove, packageJson))
   .then(writeJsonFile.bind(null, fileLocations.packageJsonLocation, packageJson))
   .then(installPackages)
-  .then(deleteFolderRecursive.bind(null, __dirname));
+  .then(() => {
+      deleteFolderRecursive(fileLocations.init)
+  });

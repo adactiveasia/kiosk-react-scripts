@@ -23,7 +23,6 @@ module.exports = {
     dependenciesToAdd: {
         "@adactive/adactive-abstract-options": "^1.0.0",
         "@adactive/adactive-logger": "^1.0.0",
-        "@adactive/adsum-adloader": "^3.0.0-alpha.1",
         "@adactive/adsum-client-analytics": "^3.0.0-rc.4",
         "@adactive/adsum-client-api": "^2.3.2",
         "@adactive/adsum-utils": "^0.0.2-y.44.46",
@@ -47,6 +46,7 @@ module.exports = {
         "winston": "^3.0.0"
     },
     devDependenciesToAdd: {
+        "@adactive/adsum-adloader": "^3.0.0-rc.10",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^7.1.2",
         "babel-preset-airbnb": "^2.5.3",
@@ -56,6 +56,7 @@ module.exports = {
         "eslint-plugin-import": "^2.14.0",
         "eslint-plugin-jsx-a11y": "^6.1.1",
         "eslint-plugin-react": "^7.11.1",
+        "firebase-tools": "^4.2.1",
         "glob": "^7.1.2",
         "imports-loader": "^0.8.0",
         "react-app-rewired": "^1.6.2",
@@ -66,7 +67,9 @@ module.exports = {
     fileLocations: {
         packageJsonLocation: path.resolve(__dirname, '../package.json'),
         firebaseConfigLocation: path.resolve(__dirname, '../src/services/firebaseConfig.json'),
+        firebaserc: path.resolve(__dirname, '../firebaserc'),
         firebaseServiceLocation: path.resolve(__dirname, '../src/services/FirebaseService.js'),
-        adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json')
+        adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json'),
+        init: path.resolve(__dirname),
     }
 };

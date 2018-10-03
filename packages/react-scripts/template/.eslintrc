@@ -1,0 +1,6 @@
+{
+  "extends": "airbnb/base",
+  "settings": {
+    "import/ignore": [".scss$"]
+  }
+}

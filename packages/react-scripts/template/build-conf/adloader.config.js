@@ -12,9 +12,4 @@ module.exports = {
     build: path.join(__dirname, '..', 'server', 'build'),
   },
   killExplorer: true,
-  logRotate: {
-    enabled: true,
-    interval: '0 0 * * *', // rotate everyday at midnight
-    retain: 6,
-  }
 };

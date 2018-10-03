@@ -1,6 +1,6 @@
 // @flow
 
-import { WayfindingActions } from '@adactive/arc-map';
+import { WayfindingActions, SelectionActions } from '@adactive/arc-map';
 import { DefaultSchemaHelper, Tracker } from '@adactive/adsum-client-analytics';
 import { ClientAPI as ACA } from '@adactive/adsum-utils';
 
@@ -19,7 +19,7 @@ const trackMapActions = (tracker: Tracker, store, action) => {
         }
         break;
     }
-    case WayfindingActions.types.DID_DRAW: {
+    case WayfindingActions.types.WILL_DRAW_TO_PLACE: {
         const place = ACA.getPlace(action.placeId);
         if (place !== null) {
             tracker.add(
@@ -29,6 +29,22 @@ const trackMapActions = (tracker: Tracker, store, action) => {
                     place,
                 ),
             );
+        }
+        break;
+    }
+    case SelectionActions.types.WILL_SELECT: {
+        const { adsumObject } = action;
+        if (adsumObject && adsumObject.placeId) {
+            const place = ACA.getPlace(adsumObject.placeId);
+            if (place !== null) {
+                tracker.add(
+                    DefaultSchemaHelper.getPlaceType(),
+                    DefaultSchemaHelper.getPlaceEvent(
+                        'select',
+                        place,
+                    ),
+                );
+            }
         }
         break;
     }

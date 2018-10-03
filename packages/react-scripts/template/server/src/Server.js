@@ -24,7 +24,7 @@ class Server {
         this.server = null;
 
         this.proxyAnalytics = new TrackingAppProxy({
-            prefix: '/analytics',
+            prefix: '/proxy-analytics',
         });
     }
 
@@ -122,28 +122,8 @@ class Server {
      */
     bindApis(app) {
         this.proxyAnalytics.bind(app);
-        this.proxyAnalytics.start(this.options.production ? 3600 * 1000 : 1000);
-
-        // app.use('/getAllAppImageUrls', (req, res, next) => {
-        //     const arrOfEntryPointsRelativeToPublicDir = [
-        //         'assets/images',
-        //         'local/bin',
-        //     ];
-        //
-        //     let urls = [];
-        //     try {
-        //         urls = imageUrlsFetcher.getAllImageUrlsArr(
-        //             arrOfEntryPointsRelativeToPublicDir,
-        //             this.options.path,
-        //         );
-        //     } catch (e) {
-        //         this.options.logger.error('An error occured in getAllAppImageUrls');
-        //         console.error(e);
-        //     }
-        //
-        //     res.end(JSON.stringify({ urls }));
-        //     next();
-        // });
+        // Flush every 5 minutes in production, every seconds in dev
+        this.proxyAnalytics.start(this.options.production ? 500000 : 1000);
     }
 
     bind(app = express()) {
