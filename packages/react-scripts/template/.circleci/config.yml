@@ -12,17 +12,16 @@ jobs:
       - checkout
       - restore_cache: # special step to restore the dependency cache
           keys:
-            # Find a cache corresponding to this specific package-lock.json checksum
+            # Find a cache corresponding to this specific yarn.lock checksum
             # when this file is changed, this key will fail
-            - dependency-cache-{{ checksum "package.json" }}
+            - yarn-cache-{{ checksum "yarn.lock" }}
             # Find the most recently generated cache used from any branch
-            - dependency-cache-
-      - run: yarn install
+            - yarn-cache-
+      - run: yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-            - yarn.lock
       - run: yarn run lint
   build:
     working_directory: ~/repo
@@ -32,17 +31,16 @@ jobs:
       - checkout
       - restore_cache: # special step to restore the dependency cache
           keys:
-            # Find a cache corresponding to this specific package-lock.json checksum
+            # Find a cache corresponding to this specific yarn.lock checksum
             # when this file is changed, this key will fail
-            - dependency-cache-{{ checksum "package.json" }}
+            - yarn-cache-{{ checksum "yarn.lock" }}
             # Find the most recently generated cache used from any branch
             - dependency-cache-
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: yarn-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-            - yarn.lock
       - run: yarn run build
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
