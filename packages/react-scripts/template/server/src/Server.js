@@ -130,7 +130,7 @@ class Server {
         app.use(cors());
         app.use(compression());
 
-        app.use('/', serveStatic(this.options.path, { maxAge: '1d' }));
+        app.use('/', serveStatic(this.options.path, { cacheControl: false }));
 
         this.bindApis(app);
 
