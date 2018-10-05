@@ -4,9 +4,9 @@ module.exports = {
     scriptsToAdd: {
         "start": "npm run compile-server && npm run build-css && run-p -ncr watch-css start-js",
         "build": "npm run compile-server && run-s -n build-css build-js",
-        "lint": "eslint .",
         "test": "run-s -n build-css test-js",
         "eject": "react-scripts eject",
+        "lint": "eslint .",
         "start-js": "react-app-rewired start --scripts-version @adactive/kiosk-react-scripts",
         "build-js": "react-app-rewired build --scripts-version @adactive/kiosk-react-scripts",
         "test-js": "react-app-rewired test --env=jsdom --scripts-version @adactive/kiosk-react-scripts",
@@ -23,9 +23,9 @@ module.exports = {
     dependenciesToAdd: {
         "@adactive/adactive-abstract-options": "^1.0.0",
         "@adactive/adactive-logger": "^1.0.0",
-        "@adactive/adsum-client-analytics": "^3.0.0-rc.4",
+        "@adactive/adsum-client-analytics": "^3.0.0",
         "@adactive/adsum-client-api": "^2.3.2",
-        "@adactive/adsum-utils": "^0.0.2-y.44.46",
+        "@adactive/adsum-utils": "^1.0.0",
         "@adactive/adsum-web-map": "^5.4.0",
         "@adactive/arc-map": "^0.0.2-y.44.46",
         "body-parser": "^1.18.2",
@@ -46,7 +46,7 @@ module.exports = {
         "winston": "^3.0.0"
     },
     devDependenciesToAdd: {
-        "@adactive/adsum-adloader": "^3.0.0-rc.10",
+        "@adactive/adsum-adloader": "^3.0.0",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^7.1.2",
         "babel-preset-airbnb": "^2.5.3",
