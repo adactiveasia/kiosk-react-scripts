@@ -1,3 +1,44 @@
+# Adactive Create React App
+
+This fork is used to customize the default Create React App in order to be able to boilerplate Adactive Kiosk Application.
+
+[See differences](https://github.com/AdactiveSAS/create-react-app/pull/3)
+
+> We will assume that you want to create an application named project-my-app, please adapt the following instructions 
+accordingly.
+
+## Requirements
+
+You will need the following
+
+- Create a new NPM token, with access to AdactiveSAS repositories (do not forget to add npm token to the list)
+- Create 3 firebase projects with Generic Adactive Account
+    - One for master branch, named `project-my-app` (replace my-app by the name of your project)
+    - One for releases/hotfix branches, named `project-my-app-stg`
+    - One for develop branch, named `project-my-app-dev`
+- Create the corresponding Github repository without initializing it
+
+## Quick Start
+
+```bash
+npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.3.0
+cd project-my-app
+yarn install
+yarn start
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/AdactiveSAS/project-my-app.git
+git push -u origin master
+```
+
+## Setup
+
+To continue setup, please read the README.md of your newly created project.
+
+
+> Following the original README.md
+
 # Create React App [![Build Status](https://travis-ci.org/facebookincubator/create-react-app.svg?branch=master)](https://travis-ci.org/facebookincubator/create-react-app)
 
 Create React apps with no build configuration.
@@ -11,7 +52,7 @@ If something doesn’t work, please [file an issue](https://github.com/facebooki
 ## Quick Overview
 
 ```sh
-npx create-react-app my-app --scripts-version @adactive/kiosk-react-scripts
+npx create-react-app my-app
 cd my-app
 npm start
 ```
