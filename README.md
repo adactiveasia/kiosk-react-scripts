@@ -1,3 +1,79 @@
+# Adactive Create React App
+
+This fork is used to customize the default Create React App in order to be able to boilerplate Adactive Kiosk Application.
+
+[See differences](https://github.com/AdactiveSAS/create-react-app/pull/3)
+
+> We will assume that you want to create an application named project-my-app, please adapt the following instructions 
+accordingly.
+
+## Requirements
+
+You will need the following
+
+- Create a new NPM token, with access to AdactiveSAS repositories (do not forget to add npm token to the list)
+- Create 3 firebase projects with Generic Adactive Account
+    - One for master branch, named `project-my-app` (replace my-app by the name of your project)
+    - One for releases/hotfix branches, named `project-my-app-stg`
+    - One for develop branch, named `project-my-app-dev`
+- Create the corresponding Github repository without initializing it
+
+## Quick Start
+
+```bash
+npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.2.0
+cd project-my-app
+yarn start
+```
+
+## Setup
+
+### Push to Github
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/AdactiveSAS/project-my-app.git
+git push -u origin master
+```
+
+### Continuous Delivery
+
+To continue setup, please read the README.md of your newly created project.
+
+- [Login to CircleCI - Using Github](https://circleci.com/vcs-authorize/)
+- Click on **Add Projects**
+    - ![Add Project Illustration](docs/assets/circleci_add_project.png)
+- Find yours and click on **Set Up Project**
+    - ![Setup Project Illustration](docs/assets/circleci_setup_project.png)
+- The project is already configured (look at your `/.cicleci/config.yml` file). So you can click directly on
+**Start Building**
+    - ![Start Building Project Illustration](docs/assets/circleci_start_building.png)
+- To finish project setup, you need to create environment variables in order to let CircleCi access AWS S3 & Firebase.
+Go on **Settings > Projects > AdactiveSAS/project-my-app**
+    - ![Project settings](./docs/assets/circleci_project_settings.png)
+    - Click on the wheel ![Wheel](./docs/assets/circleci_wheel.png)
+    - **Environment Variables > Import Variables > project-my-app**
+    - ![Import Variables](./docs/assets/circleci_import_variables.png)
+
+> Once done, you can test your workflow by creating a release with github named v0.1.0.
+
+### Github
+
+- Create develop branch
+```bash
+git checkout -b develop
+git push -u origin develop
+```
+- Setup project on github
+    - Protect **master** branch
+        - **Settings > Branches > Add Rule**
+        - ![Github Protect Master](./docs/assets/github_protect_master.png)
+    - Protect **develop** by doing the same
+
+> Following the original README.md
+
 # Create React App [![Build Status](https://travis-ci.org/facebookincubator/create-react-app.svg?branch=master)](https://travis-ci.org/facebookincubator/create-react-app)
 
 Create React apps with no build configuration.
@@ -11,7 +87,7 @@ If something doesn’t work, please [file an issue](https://github.com/facebooki
 ## Quick Overview
 
 ```sh
-npx create-react-app my-app --scripts-version @adactive/kiosk-react-scripts
+npx create-react-app my-app
 cd my-app
 npm start
 ```

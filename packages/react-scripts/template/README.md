@@ -1,7 +1,74 @@
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+# User Guide - Adactive Create React App
+
+This project was bootstrapped with [Create React App - Adactive Fork](https://github.com/AdactiveSAS/create-react-app).
+
+## Adactive Sugar
+
+- eslint configuration
+    - Use `yarn run lint` to check syntax
+    - Use `yarn run lint --fix` to try to fix errors
+- firebase configuration
+    - Project config saved in `src/services/firebaseConfig.json`
+    - `.firebaserc` to handle hosting (Master, Develop and hotfix/release branches)
+- Application Server
+    - `server/src`
+    - Integrated in `yarn run build` and `yarn start` commands
+    - Webpack configuration under `build-conf/webpack.config.server.js`
+- Webpack rewire to override App Webpack config
+    - See `config-overrides.js`
+- FlowJs
+- Adloader to package and deploy Kiosk Applications
+    - Configuration under `build-conf/adloader.config.js`
+    - Template override under `adloader-template`
+    - Script `yarn run adloader:step:setup` to run adloader setup command (use this to debug)
+    - Script `yarn run adloader:step:package` to run adloader package command (use this to debug)
+    - Script `yarn run adloader:step:installer` to run adloader installer command (use this to debug)
+    - Script `yarn run adloader:step:deploy` to run adloader deploy command (do not use this, prefered way to deploy is using continuous integration)
+    - Script `yarn run adloader` to run all adloader steps   
+    - [See AdLoader for more details](https://github.com/AdactiveSAS/adsum-adloader)
+- CircleCi
+    - Run `lint` on each commit
+    - Run `build` on each commit
+    - Run `adloader` on each tag
+    - Run `firebase` deploy automatically the last branch commit
+
+## Workflow
+
+You must follow the [Adactive developing Guide](https://docs.google.com/document/d/1dryIKaP46rTH6HlXsrY6_U7NQx8a4ooHbgMXHo8j3Cw/edit#heading=h.8ay6ylakr8et)
+
+### How To
+
+#### Develop a Feature
+
+- Create a feature branch from develop
+- Add some commits
+- Once finished
+    - Merge develop onto your branch to be up-to-date
+    - Make sure your project pass `yarn run lint` & `yarn run build`
+- Open a PR against develop
+- Request a review
+
+#### Firebase
+
+CircleCi will manage to put your project on firebase latest commit on:
+
+- **master** will be hosted on the projectId given in "production" on your `.firebaserc`
+- **develop** will be hosted on the projectId given in "develop" on your `.firebaserc` 
+- **release** and **hotfix** will be hosted on the projectId given in "staging" on your `.firebaserc` 
+
+#### Release
+
+CircleCi will create a Release for each tag version and upload it on S3 bucket, specially created by project:
+
+- Release tag **vx.y.z** will be publish on S3 the stable channel (devices will autoUpdate to that one).
+- Pre-Release tag **vx.y.z-rcX** will be published on S3 on the beta channel (no auto-update).
+
+> You can follow on the official documentation, but keep in mind that this version is different from the official one...
+
+# User Guide - Facebook Create React App (Official)
 
 Below you will find some information on how to perform common tasks.<br>
-You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+You can find the most recent version of this guide [here](https://github.com/AdactiveSAS/create-react-app/blob/support/adactive/packages/react-scripts/template/README.md).
 
 ## Table of Contents
 
@@ -114,15 +181,15 @@ You almost never need to update `create-react-app` itself: it delegates all the 
 
 When you run `create-react-app`, it always creates the project with the latest version of `react-scripts` so you’ll get all the new features and improvements in newly created apps automatically.
 
-To update an existing project to a new version of `react-scripts`, [open the changelog](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md), find the version you’re currently on (check `package.json` in this folder if you’re not sure), and apply the migration instructions for the newer versions.
+To update an existing project to a new version of `react-scripts`, [open the changelog](https://github.com/AdactiveSAS/create-react-app/blob/support/adactive/CHANGELOG.md), find the version you’re currently on (check `package.json` in this folder if you’re not sure), and apply the migration instructions for the newer versions.
 
-In most cases bumping the `react-scripts` version in `package.json` and running `npm install` in this folder should be enough, but it’s good to consult the [changelog](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md) for potential breaking changes.
+In most cases bumping the `react-scripts` version in `package.json` and running `npm install` in this folder should be enough, but it’s good to consult the [changelog](https://github.com/AdactiveSAS/create-react-app/blob/support/adactive/CHANGELOG.md) for potential breaking changes.
 
 We commit to keeping the breaking changes minimal so you can upgrade `react-scripts` painlessly.
 
 ## Sending Feedback
 
-We are always open to [your feedback](https://github.com/facebookincubator/create-react-app/issues).
+We are always open to [your feedback](https://github.com/AdactiveSAS/create-react-app/issues).
 
 ## Folder Structure
 
@@ -1267,7 +1334,7 @@ Then, on the server, you can replace `__SERVER_DATA__` with a JSON of real data 
 ## Running Tests
 
 >Note: this feature is available with `react-scripts@0.3.0` and higher.<br>
->[Read the migration guide to learn how to enable it in older projects!](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md#migrating-from-023-to-030)
+>[Read the migration guide to learn how to enable it in older projects!](https://github.com/facebookincubator/create-react-app/blob/support/adactive/CHANGELOG.md#migrating-from-023-to-030)
 
 Create React App uses [Jest](https://facebook.github.io/jest/) as its test runner. To prepare for this integration, we did a [major revamp](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html) of Jest so if you heard bad things about it years ago, give it another try.
 
