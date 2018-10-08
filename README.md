@@ -21,10 +21,16 @@ You will need the following
 ## Quick Start
 
 ```bash
-npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.3.0
+npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.2.0
 cd project-my-app
-yarn install
 yarn start
+```
+
+## Setup
+
+### Push to Github
+
+```bash
 git init
 git add .
 git commit -m "Initial commit"
@@ -32,10 +38,39 @@ git remote add origin https://github.com/AdactiveSAS/project-my-app.git
 git push -u origin master
 ```
 
-## Setup
+### Continuous Delivery
 
 To continue setup, please read the README.md of your newly created project.
 
+- [Login to CircleCI - Using Github](https://circleci.com/vcs-authorize/)
+- Click on **Add Projects**
+    - ![Add Project Illustration](docs/assets/circleci_add_project.png)
+- Find yours and click on **Set Up Project**
+    - ![Setup Project Illustration](docs/assets/circleci_setup_project.png)
+- The project is already configured (look at your `/.cicleci/config.yml` file). So you can click directly on
+**Start Building**
+    - ![Start Building Project Illustration](docs/assets/circleci_start_building.png)
+- To finish project setup, you need to create environment variables in order to let CircleCi access AWS S3 & Firebase.
+Go on **Settings > Projects > AdactiveSAS/project-my-app**
+    - ![Project settings](./docs/assets/circleci_project_settings.png)
+    - Click on the wheel ![Wheel](./docs/assets/circleci_wheel.png)
+    - **Environment Variables > Import Variables > project-my-app**
+    - ![Import Variables](./docs/assets/circleci_import_variables.png)
+
+> Once done, you can test your workflow by creating a release with github named v0.1.0.
+
+### Github
+
+- Create develop branch
+```bash
+git checkout -b develop
+git push -u origin develop
+```
+- Setup project on github
+    - Protect **master** branch
+        - **Settings > Branches > Add Rule**
+        - ![Github Protect Master](./docs/assets/github_protect_master.png)
+    - Protect **develop** by doing the same
 
 > Following the original README.md
 

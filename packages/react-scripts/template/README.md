@@ -32,23 +32,36 @@ This project was bootstrapped with [Create React App - Adactive Fork](https://gi
     - Run `adloader` on each tag
     - Run `firebase` deploy automatically the last branch commit
 
-## Setup
+## Workflow
 
-### CircleCI
+You must follow the [Adactive developing Guide](https://docs.google.com/document/d/1dryIKaP46rTH6HlXsrY6_U7NQx8a4ooHbgMXHo8j3Cw/edit#heading=h.8ay6ylakr8et)
 
-- Login to circleci using github
-- Add Project > Select your project > Setup Project
-- 
+### How To
 
-### Create a tag
+#### Develop a Feature
 
-### Download release
+- Create a feature branch from develop
+- Add some commits
+- Once finished
+    - Merge develop onto your branch to be up-to-date
+    - Make sure your project pass `yarn run lint` & `yarn run build`
+- Open a PR against develop
+- Request a review
 
-## Deployment
+#### Firebase
 
-## Process
+CircleCi will manage to put your project on firebase latest commit on:
 
+- **master** will be hosted on the projectId given in "production" on your `.firebaserc`
+- **develop** will be hosted on the projectId given in "develop" on your `.firebaserc` 
+- **release** and **hotfix** will be hosted on the projectId given in "staging" on your `.firebaserc` 
 
+#### Release
+
+CircleCi will create a Release for each tag version and upload it on S3 bucket, specially created by project:
+
+- Release tag **vx.y.z** will be publish on S3 the stable channel (devices will autoUpdate to that one).
+- Pre-Release tag **vx.y.z-rcX** will be published on S3 on the beta channel (no auto-update).
 
 > You can follow on the official documentation, but keep in mind that this version is different from the official one...
 
