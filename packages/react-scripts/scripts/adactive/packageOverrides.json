@@ -1,7 +1,5 @@
-const path = require('path');
-
-module.exports = {
-    scriptsToAdd: {
+{
+    "scripts": {
         "start": "npm run compile-server && npm run build-css && run-p -ncr watch-css start-js",
         "build": "npm run compile-server && run-s -n build-css build-js",
         "test": "run-s -n build-css test-js",
@@ -20,7 +18,7 @@ module.exports = {
         "adloader:step:deploy": "adloader deploy",
         "adloader": "adloader all"
     },
-    dependenciesToAdd: {
+    "dependencies": {
         "@adactive/adactive-abstract-options": "^1.0.0",
         "@adactive/adactive-logger": "^1.0.0",
         "@adactive/adsum-client-analytics": "^3.0.0",
@@ -45,7 +43,7 @@ module.exports = {
         "serve-static": "^1.13.2",
         "winston": "^3.0.0"
     },
-    devDependenciesToAdd: {
+    "devDependencies": {
         "@adactive/adsum-adloader": "^3.0.0",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^7.1.2",
@@ -62,14 +60,5 @@ module.exports = {
         "react-app-rewired": "^1.6.2",
         "uglifyjs-webpack-plugin": "^1.2.7",
         "webpack": "^3.12.0"
-    },
-    dependenciesToRemove: ['npm', 'prompt', 'chalk'],
-    fileLocations: {
-        packageJsonLocation: path.resolve(__dirname, '../package.json'),
-        firebaseConfigLocation: path.resolve(__dirname, '../src/services/firebaseConfig.json'),
-        firebaserc: path.resolve(__dirname, '../firebaserc'),
-        firebaseServiceLocation: path.resolve(__dirname, '../src/services/FirebaseService.js'),
-        adsumConfigLocation: path.resolve(__dirname, '../public', 'config.json'),
-        init: path.resolve(__dirname),
     }
-};
+}
