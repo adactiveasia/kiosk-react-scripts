@@ -4,6 +4,9 @@ init
 node_modules
 public
 server/build
+build
+adloader-project
+adloader-package
 
-# From create-creat-app
+# From create-react-app
 src/registerServiceWorker.js
