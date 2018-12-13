@@ -1,32 +1,36 @@
 // @flow
 
 import * as React from 'react';
-import type { Element } from 'react';
 import { connect } from 'react-redux';
 
 import {
     AdsumLoader, AdsumWebMap, ArrowPathPatternOptions, DotPathBuilder, DotPathBuilderOptions,
     PinUserObject, SingleFloorAnimation,
 } from '@adactive/adsum-web-map';
-
+import LoadingScreen, { LoadingScreenActions } from '@adactive/arc-loading-screen';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 
 import { Map, WayfindingActions } from '@adactive/arc-map';
+
+import type { MapStateType } from '@adactive/arc-map/src/initialState';
+import type { AppStateType } from './rootReducer';
+
 import deviceConfig from './services/Config';
 import store from './store/index';
 
-import { Header } from './components/Header/index';
+import Header from './components/Header';
 
 import './App.css';
 
 import logo from './assets/logo.png';
 
 type MappedStatePropsType = {|
-    mapState: MapStateType
+    mapState: MapStateType,
 |};
 
 type MappedDispatchPropsType = {|
-    onMapClicked: (object) => void
+    onMapClicked: (object: *) => void,
+    setPercentage: (percentage: ?number) => void,
 |};
 type OwnPropsType = {||};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -48,9 +52,14 @@ class App extends React.Component<PropsType, StateType> {
     awm: ?AdsumWebMap = null;
 
     componentDidMount() {
+        const { setPercentage } = this.props;
+
         deviceConfig.init()
-            .then((): void => ACA.init(deviceConfig.config.api))
-            .then((): void => ACA.load())
+            .then(() => { setPercentage(10); })
+            .then(() => ACA.init(deviceConfig.config.api))
+            .then(() => { setPercentage(25); })
+            .then(() => ACA.load())
+            .then(() => { setPercentage(75); })
             .then(() => {
                 this.awm = new AdsumWebMap({
                     loader: new AdsumLoader({
@@ -76,7 +85,10 @@ class App extends React.Component<PropsType, StateType> {
                                 color: '#be272f',
                             }),
                         })),
-                        userObject: new PinUserObject({ color: '#be272f', size: 8 }),
+                        userObject: new PinUserObject({
+                            color: '#be272f',
+                            size: 8,
+                        }),
                     },
                     scene: {
                         animation: new SingleFloorAnimation({
@@ -91,14 +103,17 @@ class App extends React.Component<PropsType, StateType> {
                     },
                 });
 
+                setPercentage(90);
                 this.setState({ configLoaded: true });
-            });
+            })
+            .catch(e => { console.error(e); });
     }
 
     componentDidUpdate() {
         const { mapLoaded, configLoaded } = this.state;
-        const { mapState } = this.props;
+        const { mapState, setPercentage } = this.props;
         if (configLoaded && !mapLoaded && mapState === 'idle') {
+            setPercentage(100);
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({ mapLoaded: true });
         }
@@ -109,7 +124,7 @@ class App extends React.Component<PropsType, StateType> {
         return true;
     }
 
-    renderMap = (): Map => {
+    renderMap(): Map {
         const { onMapClicked } = this.props;
 
         return (
@@ -119,32 +134,19 @@ class App extends React.Component<PropsType, StateType> {
                 isOpen={this.isMapOpen()}
                 className="app-map-container"
                 onClick={onMapClicked}
-                userObjectLabel={this.userObjectLabel}
             >
                 <div id="adsum-web-map-container" ref={this.awmContainerRef} />
             </Map>
         );
-    };
-
-    renderLoadingScreen(): ?Element<'div'> {
-        const { mapLoaded } = this.state;
-
-        if (!mapLoaded) {
-            return (
-                <div className="loadingScreen">
-                    <p>LOADING....</p>
-                </div>
-            );
-        }
-
-        return null;
     }
 
-    render(): Element<'div'> {
+    render(): React.Element<'div'> {
         return (
             <div className="App">
-                { this.renderLoadingScreen() }
+                <LoadingScreen />
+
                 <Header logo={logo} />
+
                 { this.renderMap() }
             </div>
         );
@@ -152,15 +154,17 @@ class App extends React.Component<PropsType, StateType> {
 }
 
 const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
-    pathName: state.routing.location.pathname,
     mapState: state.map.state,
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
-    onMapClicked: (object): void => {
+    onMapClicked: (object: *): void => {
         if (object && object.placeId) {
             dispatch(WayfindingActions.goToPlaceAction(object.placeId));
         }
+    },
+    setPercentage: (percentage: ?number): void => {
+        dispatch(LoadingScreenActions.setPercentage(percentage));
     },
 });
 

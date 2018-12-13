@@ -4,7 +4,7 @@ import { WayfindingActions, SelectionActions } from '@adactive/arc-map';
 import { DefaultSchemaHelper, Tracker } from '@adactive/adsum-client-analytics';
 import { ClientAPI as ACA } from '@adactive/adsum-utils';
 
-const trackMapActions = (tracker: Tracker, store, action) => {
+const trackMapActions = (tracker: Tracker, store: *, action: *) => {
     switch (action.type) {
     case WayfindingActions.types.WILL_DRAW_TO_POI: {
         const poi = ACA.getPoi(action.poiId);

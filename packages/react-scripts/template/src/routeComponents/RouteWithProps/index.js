@@ -5,7 +5,7 @@ import type { Element, ComponentType } from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { AppStateType } from '../../rootReducer';
+import type { AppStateType } from '../../rootReducer';
 
 type PropsType = {
     component: ComponentType<*>

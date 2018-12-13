@@ -3,10 +3,16 @@ flow-typed
 init
 node_modules
 public
-server/build
+
+# build
 build
-adloader-project
-adloader-package
+server/build
 
 # From create-react-app
 src/registerServiceWorker.js
+
+# adloader
+adloader-project
+adloader-package
+adloader-installer
+data

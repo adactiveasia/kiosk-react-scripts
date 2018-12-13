@@ -21,7 +21,7 @@ You will need the following
 ## Quick Start
 
 ```bash
-npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.2.0
+npx create-react-app project-my-app --scripts-version @adactive/kiosk-react-scripts@^1.3.0
 cd project-my-app
 yarn start
 ```

@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import Header from './Header';
 
-export { Header };
+export default Header;
