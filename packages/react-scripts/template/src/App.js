@@ -19,7 +19,7 @@ import type { AppStateType } from './rootReducer';
 import deviceConfig from './services/Config';
 import store from './store/index';
 
-import { Header } from './components/Header';
+import Header from './components/Header';
 
 import './App.css';
 
