@@ -1,6 +1,34 @@
 // @flow
 
+export type ConfigType = {|
+    siteId: number,
+    map: {|
+        deviceId: number,
+    |},
+    api: {|
+        endpoint: string,
+        site: number,
+        username: string,
+        key: string,
+    |},
+    analytics: {|
+        endpoint: string,
+        device: number,
+        site: number,
+        zone: string,
+        token: string,
+    |},
+|};
+
 class Config {
+    config: ?ConfigType;
+
+    site: ?number;
+
+    initPromise: *;
+    resolve: *;
+    reject: *;
+
     constructor() {
         this.config = null;
         this.site = null;
@@ -17,11 +45,10 @@ class Config {
 
     async init(siteId: ?number = null): Promise<void> {
         return this.doInit(siteId)
-            .then(() => {
-                this.resolve();
-            })
+            .then(() => { this.resolve(); })
             .catch((e) => {
                 this.reject(e);
+                throw e;
             });
     }
 
@@ -29,24 +56,27 @@ class Config {
         this.site = siteId;
 
         const configFile = this.site ? `/configs/${this.site}/config.json` : '/config.json';
-        try {
-            console.log('Checking config file path: ', configFile);
-            const response = await fetch(configFile);
 
+        try {
+            console.groupCollapsed('Config file');
+
+            console.log('Config file path: ', configFile);
+
+            const response = await fetch(configFile);
             this.config = await response.json();
 
-            console.log('Trying to get config: ', this.config);
-        } catch (e) {
-            console.error('Unable to get config: ', e);
+            console.log('Config file json: ', this.config);
 
-            throw new Error(`Config.js: unable to find ${configFile} file`);
-        }
+            console.groupEnd();
+        } catch (e) { throw Error(`Config: unable to find '${configFile}' file`); }
 
-        if (this.site !== null && this.config.siteId !== this.site) {
-            throw new Error(`Config.js: ${configFile} file is not for siteId ${this.site}`);
+        if (!this.config) throw Error('Config is empty');
+
+        if (this.site && this.config.siteId !== this.site) {
+            throw Error(`Config: '${configFile}' file is not for siteId '${this.site}'`);
         }
     }
 }
 
-const config = new Config();
+const config: Config = new Config();
 export default config;

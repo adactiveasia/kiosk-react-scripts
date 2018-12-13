@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import type { Element } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -30,7 +29,7 @@ type MappedStatePropsType = {|
 |};
 
 type MappedDispatchPropsType = {|
-    onMapClicked: (object) => void,
+    onMapClicked: (object: *) => void,
     setPercentage: (percentage: ?number) => void,
 |};
 type OwnPropsType = {||};
@@ -56,11 +55,11 @@ class App extends React.Component<PropsType, StateType> {
         const { setPercentage } = this.props;
 
         deviceConfig.init()
-            .then((): void => setPercentage(10))
-            .then((): void => ACA.init(deviceConfig.config.api))
-            .then((): void => setPercentage(25))
-            .then((): void => ACA.load())
-            .then((): void => setPercentage(75))
+            .then(() => { setPercentage(10); })
+            .then(() => ACA.init(deviceConfig.config.api))
+            .then(() => { setPercentage(25); })
+            .then(() => ACA.load())
+            .then(() => { setPercentage(75); })
             .then(() => {
                 this.awm = new AdsumWebMap({
                     loader: new AdsumLoader({
@@ -106,7 +105,8 @@ class App extends React.Component<PropsType, StateType> {
 
                 setPercentage(90);
                 this.setState({ configLoaded: true });
-            });
+            })
+            .catch(e => { console.error(e); });
     }
 
     componentDidUpdate() {
@@ -134,14 +134,13 @@ class App extends React.Component<PropsType, StateType> {
                 isOpen={this.isMapOpen()}
                 className="app-map-container"
                 onClick={onMapClicked}
-                userObjectLabel={this.userObjectLabel}
             >
                 <div id="adsum-web-map-container" ref={this.awmContainerRef} />
             </Map>
         );
     }
 
-    render(): Element<'div'> {
+    render(): React.Element<'div'> {
         return (
             <div className="App">
                 <LoadingScreen />
@@ -155,12 +154,11 @@ class App extends React.Component<PropsType, StateType> {
 }
 
 const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
-    pathName: state.routing.location.pathname,
     mapState: state.map.state,
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
-    onMapClicked: (object): void => {
+    onMapClicked: (object: *): void => {
         if (object && object.placeId) {
             dispatch(WayfindingActions.goToPlaceAction(object.placeId));
         }
