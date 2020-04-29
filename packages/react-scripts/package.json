@@ -1,6 +1,6 @@
 {
-  "name": "@adactive/kiosk-react-scripts",
-  "version": "1.3.0",
+  "name": "@adactiveasia/kiosk-react-scripts",
+  "version": "0.0.1",
   "description": "Configuration and scripts for Kiosk React App.",
   "repository": "AdactiveSAS/create-react-app",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "eslint-plugin-react": "7.4.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
-    "firebase": "^4.12.1",
+    "firebase": "^7.14.2",
     "flow-bin": "^0.69.0",
     "fs-extra": "^5.0.0",
     "history": "^4.7.2",
@@ -95,8 +95,8 @@
     "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "optionalDependencies": {
     "fsevents": "^1.1.3"
